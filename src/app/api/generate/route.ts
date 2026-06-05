@@ -4,6 +4,9 @@ import { PROMPTS } from "@/data/prompts";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
+// Nano Banana 2 (Gemini 3 Pro Image). Override via env without code changes.
+const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image-preview";
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -61,7 +64,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash-preview-image-generation",
+      model: IMAGE_MODEL,
       contents: [{ role: "user", parts: contentParts }],
       config: {
         responseModalities: [Modality.IMAGE, Modality.TEXT],
@@ -97,9 +100,17 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: any) {
     console.error("Gemini API Error:", err);
-    return NextResponse.json(
-      { error: err.message || "Unbekannter Fehler bei der Bildgenerierung" },
-      { status: 500 }
-    );
+    const raw = err?.message || "Unbekannter Fehler bei der Bildgenerierung";
+    // Surface a clear hint when the configured image model is unavailable for this key
+    if (/not found|NOT_FOUND|404/i.test(raw)) {
+      return NextResponse.json(
+        {
+          error: `Das Bild-Modell '${IMAGE_MODEL}' ist für diesen API-Key nicht verfügbar. Prüfe in Google AI Studio, ob das Modell freigeschaltet ist, oder setze die Umgebungsvariable GEMINI_IMAGE_MODEL auf ein verfügbares Modell.`,
+          details: raw,
+        },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({ error: raw }, { status: 500 });
   }
 }
