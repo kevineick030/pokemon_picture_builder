@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI, Modality } from "@google/genai";
 import { PROMPTS } from "@/data/prompts";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
     let finalPrompt: string;
 
     if (finalPromptOverride) {
-      // Power-user custom prompt: use as-is, skip template assembly
       finalPrompt = finalPromptOverride;
     } else {
       const template = PROMPTS.find((p) => p.id === promptId);
@@ -23,19 +22,17 @@ export async function POST(req: NextRequest) {
 
       // Step 1: Auto-describe person from reference image if no manual description
       if (referenceImageBase64 && !personDescription) {
-        const visionModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-        const visionResult = await visionModel.generateContent([
-          {
-            inlineData: {
-              mimeType: referenceImageMimeType || "image/jpeg",
-              data: referenceImageBase64,
-            },
-          },
-          {
-            text: `Beschreibe die Person auf diesem Foto in 2-3 Sätzen für eine Anime/TCG-Karten-Illustration. Fokussiere dich auf: Geschlecht, Haarfarbe, Haarstil, Augenfarbe, Hautton, markante Gesichtsmerkmale. Formuliere die Beschreibung so, dass ein Bildgenerator damit die Person erkennen und zeichnen kann. Beispiel: "Eine junge Frau mit langen dunklen Haaren, braunen Augen, heller Haut und einem freundlichen Lächeln." Antworte nur mit der Beschreibung, ohne Erklärungen.`,
-          },
-        ]);
-        fotoDescription = visionResult.response.text().trim();
+        const visionResult = await ai.models.generateContent({
+          model: "gemini-2.0-flash",
+          contents: [{
+            role: "user",
+            parts: [
+              { inlineData: { mimeType: referenceImageMimeType || "image/jpeg", data: referenceImageBase64 } },
+              { text: `Beschreibe die Person auf diesem Foto in 2-3 Sätzen für eine Anime/TCG-Karten-Illustration. Fokussiere dich auf: Geschlecht, Haarfarbe, Haarstil, Augenfarbe, Hautton, markante Gesichtsmerkmale. Formuliere die Beschreibung so, dass ein Bildgenerator damit die Person erkennen und zeichnen kann. Beispiel: "Eine junge Frau mit langen dunklen Haaren, braunen Augen, heller Haut und einem freundlichen Lächeln." Antworte nur mit der Beschreibung, ohne Erklärungen.` },
+            ],
+          }],
+        });
+        fotoDescription = (visionResult.text ?? "").trim();
       }
 
       // Step 2: Replace placeholders in the template
@@ -44,25 +41,16 @@ export async function POST(req: NextRequest) {
         .replace(/\[POKEMON_NAME\]/g, pokemonName || "")
         .replace(/\[FOTO_BESCHREIBUNG_DER_PERSON\]/g, fotoDescription);
 
-      // Append card stats
       if (statsAppendix) {
         finalPrompt += statsAppendix;
       }
     }
 
     // Step 3: Generate the image
-    const imageModel = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
-      generationConfig: {
-        responseModalities: ["Text", "Image"],
-      } as any,
-    });
-
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
       { text: finalPrompt },
     ];
 
-    // Optionally include the reference image directly in the generation prompt
     if (referenceImageBase64) {
       contentParts.push({
         inlineData: {
@@ -72,18 +60,23 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const result = await imageModel.generateContent(contentParts as any);
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash-preview-image-generation",
+      contents: [{ role: "user", parts: contentParts }],
+      config: {
+        responseModalities: [Modality.IMAGE, Modality.TEXT],
+      },
+    });
 
-    const response = result.response;
     let imageData: string | null = null;
     let imageMimeType = "image/png";
     let textResponse = "";
 
-    for (const candidate of response.candidates || []) {
-      for (const part of candidate.content?.parts || []) {
+    for (const candidate of result.candidates ?? []) {
+      for (const part of candidate.content?.parts ?? []) {
         if (part.inlineData?.data) {
           imageData = part.inlineData.data;
-          imageMimeType = part.inlineData.mimeType || "image/png";
+          imageMimeType = part.inlineData.mimeType ?? "image/png";
         } else if (part.text) {
           textResponse += part.text;
         }
