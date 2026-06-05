@@ -7,7 +7,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType } = body;
+    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix } = body;
 
     const template = PROMPTS.find((p) => p.id === promptId);
     if (!template) {
@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
       .replace(/\[HOLDER_NAME\]/g, holderName || "")
       .replace(/\[POKEMON_NAME\]/g, pokemonName || "")
       .replace(/\[FOTO_BESCHREIBUNG_DER_PERSON\]/g, fotoDescription);
+
+    // Append card stats if provided
+    if (statsAppendix) {
+      finalPrompt += statsAppendix;
+    }
 
     // Step 3: Generate the image
     const imageModel = genAI.getGenerativeModel({
