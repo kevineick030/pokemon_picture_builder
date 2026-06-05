@@ -44,8 +44,6 @@ export async function POST(req: NextRequest) {
       model: "gemini-2.0-flash-preview-image-generation",
     });
 
-    const imageParts: Parameters<typeof imageModel.generateContent>[0] extends { contents: infer C } ? C : never[] = [];
-
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
       { text: finalPrompt },
     ];
