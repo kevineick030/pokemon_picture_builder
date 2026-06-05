@@ -840,6 +840,24 @@ export default function Home() {
 
               {/* Generate buttons */}
               <div className="space-y-2">
+                {/* Checklist: what's still missing */}
+                {!canGenerate && !isLoading && (
+                  <div className="flex flex-col gap-1 px-1">
+                    <p className="text-xs font-semibold text-slate-500 mb-0.5">Noch ausstehend:</p>
+                    <p className={`text-xs flex items-center gap-1.5 ${selectedPrompt ? "text-green-500" : "text-slate-500"}`}>
+                      {selectedPrompt ? "✓" : "○"} Design auswählen
+                      {!selectedPrompt && (
+                        <button onClick={() => setActiveTab("designs")} className="underline text-purple-400 hover:text-purple-300">
+                          → Designs
+                        </button>
+                      )}
+                    </p>
+                    <p className={`text-xs flex items-center gap-1.5 ${holderName.trim() ? "text-green-500" : "text-slate-500"}`}>
+                      {holderName.trim() ? "✓" : "○"} Name der Person eingeben
+                    </p>
+                  </div>
+                )}
+
                 {/* Variant mode toggle */}
                 <div className="flex items-center gap-2">
                   <button
