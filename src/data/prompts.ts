@@ -929,6 +929,121 @@ Extrem farbenfrohe Anime-Illustration. WICHTIG: Übernimm die exakten Gesichtsme
 
 
   // ════════════════════════════════════════════════════════════════════════
+  // NEUE STILE – WATERCOLOR, RETRO, CHIBI
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    id: 39,
+    name: "Aquarell-Meisterwerk (TRAINER)",
+    subtitle: "Soft Watercolor – Wirkt traumhaft auf Holo",
+    category: "Neue Kunststile",
+    hasPokemon: false,
+    icon: "🎨",
+    color: "from-rose-300 to-cyan-300",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Vollständige Full-Art-Illustration bis an alle Ränder.
+
+**Kunststil:** Pokémon TCG Aquarell/Watercolor Full-Art Stil. Weiche, fließende Aquarell-Pinselstriche mit zarten Farbübergängen. Die Farben verlaufen ineinander wie echte Aquarellfarbe auf nassem Papier – kein harter Cel-Shading, sondern weiche, organische Ränder. Pastelltöne gemischt mit einzelnen leuchtenden Akzenten. Auf Holo-Vinyl-Folie wirkt dieser Stil absolut traumhaft – die weichen Farbverläufe schimmern wie Seide.
+
+**Header-Bereich:**
+* Oben Links: 'Unterstützer' (zartes Orange-Rot, fett, kursiv).
+* Oben Rechts: 'TRAINER' (dunkelgrau, serifenlos).
+* Titel: '[HOLDER_NAME]s Aquarell-Welt' (groß, fett, tintenschwarz, leicht strukturiert).
+
+**Haupt-Artwork:**
+Traumhaft schöne Aquarell-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person ist im Aquarell-Stil gemalt – weiche Konturen, fließende Farben. Hintergrund: Eine abstrakte, malerische Naturszene mit zerlaufenden Aquarellflecken in Blau, Rosa, Gelb und Grün. Einzelne klare Elemente (Blumen, Blätter, Wassertropfen) mit feinen Linien. Stimmung: Poetisch, künstlerisch, wunderschön.
+
+**Textfelder:**
+* Zentraler Regeltext: 'Aquarell-Vision: Sieh dir die obersten 5 Karten deines Decks an. Lege sie in beliebiger Reihenfolge zurück.'
+* Restriction Box: 'Du kannst während deines Zuges nur 1 Unterstützerkarte spielen.'
+
+**Details:** Unten Links: 'Illustr. WatercolorMRC', Set-Infos 'MRC-ART 01/03'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 40,
+    name: "Aquarell-Duo (MIT Pokémon)",
+    subtitle: "Soft Watercolor Pokémon-Karte",
+    category: "Neue Kunststile",
+    hasPokemon: true,
+    icon: "🖌️",
+    color: "from-rose-300 to-cyan-300",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Vollständige Full-Art-Illustration.
+
+**Kunststil:** Pokémon TCG Aquarell/Watercolor Full-Art SIR Stil. Weiche Aquarell-Pinselstriche, fließende Farbübergänge, organische Ränder. Hauptfiguren (Person und Pokémon) mit etwas festeren Linien, aber der gesamte Hintergrund läuft in Aquarell-Manier ineinander. Auf Holo-Vinyl der absolut schönste, softest wirkende Stil.
+
+**Header-Bereich (Kartenkopf):**
+* Oben Links: Kleines zartes Banner: 'BASIS'.
+* Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarze Tinte mit leichter Aquarell-Textur).
+* Oben Rechts: '110 HP' (zartes Rot), Natur-Symbol.
+
+**Haupt-Artwork:**
+Malerische Aquarell-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Person und [POKEMON_NAME] in einer wunderschönen Aquarell-Naturszene – Wiese, Blumen, sanftes Licht. Alles fließt in weichen Pinselstrichen ineinander. Die Farben des Pokémons verlaufen spektakulär in den Hintergrund. Stimmung: Friedvoll, künstlerisch, premium.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Natur-Symbol] 'Farbsturm' (schwarze Tinte, fett), rechtsbündig '60'.
+* Angriff 2: [Zwei Natur-Symbole] 'Aquarell-Welle' (fett), rechtsbündig '100'. Text: 'Heile 30 Schadenspunkte.'
+* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern).
+
+**Details:** Unten links 'Illustr. WatercolorMRC', Set-Infos 'MRC-ART 02/03 ★★★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 41,
+    name: "Retro Gen-1 Klassiker (MIT Pokémon)",
+    subtitle: "Original 90s Pokémon-Look – Nostalgie-Karte",
+    category: "Neue Kunststile",
+    hasPokemon: true,
+    icon: "🕹️",
+    color: "from-yellow-300 to-orange-400",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand.
+
+**Kunststil:** Original Basis-Set Pokémon TCG Stil aus den späten 1990ern. Klare, einfache Linien, begrenzte Farbpalette, kein Cel-Shading sondern flache Aquarell-ähnliche Farbflächen wie in den originalen Basisset-Karten. Einfacher farbiger Hintergrund (kein Full-Art), ovaler Artwork-Rahmen mit Hintergrundfarbe passend zum Typ. Nostalgisch, authentisch, klassisch. Auf Holo-Vinyl hat dieser simple Stil einen eigenen Charme.
+
+**Header-Bereich (Kartenkopf):**
+* Oben Links: 'BASIS' in klassischem schwarzen Banner-Stil.
+* Titel: '[HOLDER_NAME]s [POKEMON_NAME]' (groß, fett, schwarz, klassische Schriftart).
+* HP: '[POKEMON_NAME] – 60 HP' (klassisches Layout oben rechts).
+
+**Haupt-Artwork (ovaler Rahmen):**
+Klassisch gerahmtes Artwork im Original-Pokémon-Stil der 1990er. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] sind im simplen, klaren Zeichenstil der Original-Pokémon-Karten gezeichnet – keine komplexen Schatten, klare Konturen, einfache Farben. Einfarbiger Pastell-Hintergrund passend zum Pokémon-Typ. Oval gerahmtes Bild mit farbigem Rahmen.
+
+**Textfelder (klassisches Layout):**
+* Klassisches Pokémon-Textfeld: Typ, Länge und Gewicht (fiktiv).
+* Attacke 1: 'Entschlossener Blick' – Kosten: [ColorlessSymbol] – Schaden: 10. Text: 'Zeige deinem Gegner 2 Karten aus deiner Hand.'
+* Attacke 2: 'Team-Angriff' – Kosten: [ColorlessSymbol][ColorlessSymbol] – Schaden: 30.
+* Unten: Schwäche, Widerstand, Rückzugskosten im klassischen 1999-Format.
+
+**Details:** Klassischer Pokémon-Copyright-Hinweis-Stil. Set-Nr. '001/102'. Copyright: '© My Rookie Card Base Set'.`,
+  },
+
+  {
+    id: 42,
+    name: "Chibi-Duo (MIT Pokémon)",
+    subtitle: "Super-Deformed Chibi – Süß & Einzigartig",
+    category: "Neue Kunststile",
+    hasPokemon: true,
+    icon: "🥰",
+    color: "from-pink-400 to-purple-400",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand.
+
+**Kunststil:** Pokémon TCG im niedlichen Chibi/Super-Deformed-Anime-Stil. Übertrieben große Köpfe, kleine Körper, riesige Kulleraugen. Sehr runde Formen, weiche Linien, bunte Pastellfarben. Hintergrund: bunte, süße Muster und Sterne. Auf Holo-Vinyl wirken die pastelligen Farben und die niedlichen Formen entzückend.
+
+**Header-Bereich (Kartenkopf):**
+* Oben Links: Kleines rosa/lila Banner: 'BASIS ❤'.
+* Titel: '[HOLDER_NAME] & Chibi-[POKEMON_NAME]' (groß, fett, schwarz).
+* Oben Rechts: '60 HP' (rosa), kleines Herz-Symbol.
+
+**Haupt-Artwork:**
+Ultraniede Chibi-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild, aber im Chibi-Stil vereinfacht! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person als supersüßer Chibi-Charakter mit übertrieben großem Kopf und kleinem Körper. Ihr [POKEMON_NAME] ebenfalls als Chibi. Beide machen eine fröhliche Pose. Hintergrund: Bunte Sterne, Herzchen, Blümchen in Pastell. Alles ist rund, süß und fröhlich.
+
+**Textfelder (Unteres Drittel, pastelliger Hintergrund):**
+* Attacke: [Herz-Symbol] 'Chibi-Bumms' (fett), rechtsbündig '20'. Text: 'Der Gegner findet diese Attacke sooo niedlich und kann 1 Zug lang nicht angreifen.'
+* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern ⭐).
+
+**Details:** Unten links 'Illustr. ChibiMRC', Set-Infos 'MRC-CUTE 01 ❤'. Copyright: '© My Rookie Card'.`,
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
   // KATEGORIE: RÜCKSEITE
   // ════════════════════════════════════════════════════════════════════════
 

@@ -3,6 +3,16 @@
 import { useState, useRef, useCallback } from "react";
 import { PROMPTS, CATEGORIES, type PromptTemplate } from "@/data/prompts";
 
+// ── Typen ──────────────────────────────────────────────────────────────────
+
+interface HistoryEntry {
+  imageBase64: string;
+  mimeType: string;
+  promptName: string;
+  holderName: string;
+  pokemonName: string;
+}
+
 // ── Hilfsfunktionen ────────────────────────────────────────────────────────
 
 function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }> {
@@ -10,11 +20,103 @@ function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }>
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
-      const base64 = result.split(",")[1];
-      resolve({ base64, mimeType: file.type });
+      resolve({ base64: result.split(",")[1], mimeType: file.type });
     };
     reader.onerror = reject;
     reader.readAsDataURL(file);
+  });
+}
+
+// 63mm × 88mm bei 300 DPI (25.4mm = 1 inch)
+const PRINT_W = Math.round((63 / 25.4) * 300); // 744 px
+const PRINT_H = Math.round((88 / 25.4) * 300); // 1039 px
+
+function openPrintWindow(imageBase64: string, mimeType: string) {
+  const win = window.open("", "_blank");
+  if (!win) {
+    alert("Popup wurde blockiert – bitte Pop-ups für diese Seite erlauben.");
+    return;
+  }
+  win.document.write(`<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Karte drucken – My Rookie Card</title>
+  <style>
+    @page {
+      size: 105mm 148mm;
+      margin: 0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 105mm;
+      height: 148mm;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      width: 63mm;
+      height: 88mm;
+      overflow: hidden;
+      display: block;
+    }
+    .card img {
+      width: 63mm;
+      height: 88mm;
+      display: block;
+      object-fit: fill;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .hint {
+      position: fixed;
+      bottom: 12px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 11px;
+      color: #666;
+    }
+    @media print { .hint { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="data:${mimeType};base64,${imageBase64}" alt="My Rookie Card"/>
+  </div>
+  <p class="hint">Drucker: A6 · Skalierung: 100% (Ist-Größe) · Randlos drucken aktivieren</p>
+  <script>
+    window.onload = function() {
+      setTimeout(function() { window.print(); }, 400);
+    };
+  </script>
+</body>
+</html>`);
+  win.document.close();
+}
+
+async function exportPrintPng(
+  imageBase64: string,
+  mimeType: string,
+  filename: string
+) {
+  return new Promise<void>((resolve) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = PRINT_W;
+    canvas.height = PRINT_H;
+    const ctx = canvas.getContext("2d")!;
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, PRINT_W, PRINT_H);
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = filename;
+      link.click();
+      resolve();
+    };
+    img.src = `data:${mimeType};base64,${imageBase64}`;
   });
 }
 
@@ -22,11 +124,12 @@ function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }>
 
 function CategoryBadge({ category }: { category: string }) {
   const colors: Record<string, string> = {
+    "Floral & Natur – Holo-Highlights": "bg-green-900/50 text-green-300 border-green-700",
+    "Feuer, Sturm & Elementarkräfte": "bg-orange-900/50 text-orange-300 border-orange-700",
+    "Klassische Full-Art Trainerkarten": "bg-rose-900/50 text-rose-300 border-rose-700",
+    "Epische TCG-Szenen (MIT Pokémon)": "bg-yellow-900/50 text-yellow-300 border-yellow-700",
+    "Ultra Rare & Secret Rare": "bg-purple-900/50 text-purple-300 border-purple-700",
     "Neue Kunststile": "bg-fuchsia-900/50 text-fuchsia-300 border-fuchsia-700",
-    "Epische Action-Szenen": "bg-orange-900/50 text-orange-300 border-orange-700",
-    "Klassische Trainer-Karten": "bg-green-900/50 text-green-300 border-green-700",
-    "Ultra Rare Trainer": "bg-purple-900/50 text-purple-300 border-purple-700",
-    "Holo-Vinyl Spezial": "bg-cyan-900/50 text-cyan-300 border-cyan-700",
     "Rückseite": "bg-blue-900/50 text-blue-300 border-blue-700",
   };
   return (
@@ -58,12 +161,8 @@ function PromptCard({
         <span className="text-xl mt-0.5 shrink-0">{prompt.icon}</span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 flex-wrap mb-1">
-            {selected && (
-              <span className="w-2 h-2 rounded-full bg-purple-400 shrink-0" />
-            )}
-            <span className="font-semibold text-sm text-slate-100 leading-tight">
-              {prompt.name}
-            </span>
+            {selected && <span className="w-2 h-2 rounded-full bg-purple-400 shrink-0" />}
+            <span className="font-semibold text-sm text-slate-100 leading-tight">{prompt.name}</span>
           </div>
           <p className="text-xs text-slate-400 leading-tight mb-1.5">{prompt.subtitle}</p>
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -90,7 +189,7 @@ function LoadingSpinner() {
       </div>
       <div className="text-center">
         <p className="text-purple-300 font-semibold">Karte wird generiert…</p>
-        <p className="text-slate-500 text-sm mt-1">Das kann 10–30 Sekunden dauern</p>
+        <p className="text-slate-500 text-sm mt-1">Kann 15–40 Sekunden dauern</p>
       </div>
     </div>
   );
@@ -111,10 +210,12 @@ export default function Home() {
   const [resultMimeType, setResultMimeType] = useState("image/png");
   const [autoDescription, setAutoDescription] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
     Object.fromEntries(CATEGORIES.map((c) => [c, true]))
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [exporting, setExporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredPrompts = PROMPTS.filter(
@@ -126,8 +227,7 @@ export default function Home() {
 
   const handleImageUpload = useCallback((file: File) => {
     setReferenceImageFile(file);
-    const url = URL.createObjectURL(file);
-    setReferenceImagePreview(url);
+    setReferenceImagePreview(URL.createObjectURL(file));
     setAutoDescription(null);
   }, []);
 
@@ -140,28 +240,11 @@ export default function Home() {
     [handleImageUpload]
   );
 
-  const handleGenerate = async () => {
-    if (!selectedPrompt) {
-      setError("Bitte wähle zuerst ein Design aus.");
-      return;
-    }
-    if (!holderName.trim()) {
-      setError("Bitte gib den Namen der Person ein.");
-      return;
-    }
-    if (selectedPrompt.hasPokemon && !pokemonName.trim()) {
-      setError("Dieses Design benötigt einen Pokémon-Namen.");
-      return;
-    }
-    if (useReferenceImage && !referenceImageFile && !personDescription.trim()) {
-      setError("Bitte lade ein Referenzbild hoch oder gib eine Personenbeschreibung ein.");
-      return;
-    }
+  const runGenerate = async () => {
+    if (!selectedPrompt || !holderName.trim()) return;
 
     setLoading(true);
     setError(null);
-    setResultImage(null);
-    setAutoDescription(null);
 
     try {
       let referenceImageBase64: string | undefined;
@@ -195,14 +278,34 @@ export default function Home() {
 
       setResultImage(data.imageBase64);
       setResultMimeType(data.mimeType || "image/png");
-      if (data.personDescription) {
-        setAutoDescription(data.personDescription);
-      }
+      if (data.personDescription) setAutoDescription(data.personDescription);
+
+      setHistory((prev) => [
+        {
+          imageBase64: data.imageBase64,
+          mimeType: data.mimeType || "image/png",
+          promptName: selectedPrompt.name,
+          holderName: holderName.trim(),
+          pokemonName: pokemonName.trim(),
+        },
+        ...prev.slice(0, 7),
+      ]);
     } catch (err: any) {
       setError(err.message || "Netzwerkfehler");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGenerate = async () => {
+    if (!selectedPrompt) { setError("Bitte wähle zuerst ein Design aus."); return; }
+    if (!holderName.trim()) { setError("Bitte gib den Namen der Person ein."); return; }
+    if (selectedPrompt.hasPokemon && !pokemonName.trim()) { setError("Dieses Design benötigt einen Pokémon-Namen."); return; }
+    if (useReferenceImage && !referenceImageFile && !personDescription.trim()) {
+      setError("Bitte lade ein Referenzbild hoch oder gib eine Personenbeschreibung ein.");
+      return;
+    }
+    await runGenerate();
   };
 
   const handleDownload = () => {
@@ -214,32 +317,51 @@ export default function Home() {
     link.click();
   };
 
-  const toggleCategory = (cat: string) => {
-    setOpenCategories((prev) => ({ ...prev, [cat]: !prev[cat] }));
+  const handlePrint = () => {
+    if (!resultImage) return;
+    openPrintWindow(resultImage, resultMimeType);
   };
+
+  const handleExportPrint = async () => {
+    if (!resultImage) return;
+    setExporting(true);
+    await exportPrintPng(
+      resultImage,
+      resultMimeType,
+      `${holderName || "karte"}_63x88mm_300dpi.png`
+    );
+    setExporting(false);
+  };
+
+  const toggleCategory = (cat: string) =>
+    setOpenCategories((prev) => ({ ...prev, [cat]: !prev[cat] }));
 
   const canGenerate = selectedPrompt && holderName.trim() && !loading;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Header */}
-      <header className="shrink-0 border-b border-slate-800 bg-[#09090f]/95 backdrop-blur px-6 py-4">
+      <header className="shrink-0 border-b border-slate-800 bg-[#09090f]/95 backdrop-blur px-6 py-3">
         <div className="flex items-center gap-3">
           <span className="text-3xl">🃏</span>
           <div>
-            <h1 className="text-xl font-bold text-yellow-400 tracking-tight">
-              My Rookie Card
-            </h1>
-            <p className="text-xs text-slate-400">Personalisierter TCG-Kartengenerator</p>
+            <h1 className="text-xl font-bold text-yellow-400 tracking-tight">My Rookie Card</h1>
+            <p className="text-xs text-slate-400">Personalisierter TCG-Kartengenerator · Druck auf A6 / 63×88 mm</p>
+          </div>
+          <div className="ml-auto flex items-center gap-2 text-xs text-slate-500">
+            <span className="px-2 py-1 rounded bg-slate-800 border border-slate-700">
+              {PROMPTS.length} Designs
+            </span>
           </div>
         </div>
       </header>
 
       {/* Main 3-column layout */}
       <div className="flex flex-1 overflow-hidden">
+
         {/* ── Linke Spalte: Prompt-Auswahl ── */}
         <aside className="w-80 shrink-0 border-r border-slate-800 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-800">
+          <div className="p-3 border-b border-slate-800">
             <input
               type="text"
               placeholder="Design suchen…"
@@ -271,6 +393,7 @@ export default function Home() {
             ) : (
               CATEGORIES.map((cat) => {
                 const prompts = PROMPTS.filter((p) => p.category === cat);
+                if (prompts.length === 0) return null;
                 const isOpen = openCategories[cat];
                 return (
                   <div key={cat}>
@@ -278,7 +401,7 @@ export default function Home() {
                       onClick={() => toggleCategory(cat)}
                       className="w-full flex items-center justify-between px-2 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-widest hover:text-slate-200 transition-colors"
                     >
-                      <span>{cat}</span>
+                      <span>{cat} <span className="text-slate-600 normal-case tracking-normal font-normal">({prompts.length})</span></span>
                       <span className="text-slate-600">{isOpen ? "▲" : "▼"}</span>
                     </button>
                     {isOpen && (
@@ -306,7 +429,8 @@ export default function Home() {
 
         {/* ── Mittlere Spalte: Formular ── */}
         <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-lg mx-auto space-y-6">
+          <div className="max-w-lg mx-auto space-y-5">
+
             {/* Selected prompt info */}
             {selectedPrompt ? (
               <div className={`p-4 rounded-xl bg-gradient-to-r ${selectedPrompt.color} bg-opacity-10 border border-slate-700`}>
@@ -326,7 +450,7 @@ export default function Home() {
 
             {/* Name */}
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5">
                 Name der Person <span className="text-red-400">*</span>
               </label>
               <input
@@ -338,22 +462,22 @@ export default function Home() {
               />
             </div>
 
-            {/* Pokemon Name (conditional) */}
+            {/* Pokemon Name */}
             {selectedPrompt?.hasPokemon && (
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2">
-                  Pokémon-Name <span className="text-red-400">*</span>
+                <label className="block text-sm font-semibold text-slate-300 mb-1.5">
+                  Pokémon / Kreatur <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="z.B. Glumanda (oder: Feuer-Eidechse)"
+                  placeholder="z.B. Glumanda  –  oder neutral: Feuer-Eidechse"
                   value={pokemonName}
                   onChange={(e) => setPokemonName(e.target.value)}
                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30"
                 />
-                <p className="text-xs text-yellow-600 mt-1.5 flex items-center gap-1">
-                  <span>⚠</span>
-                  Tipp: Bei Content-Filter-Problemen neutrale Beschreibung verwenden (z.B. "Feuer-Echse" statt Markenname)
+                <p className="text-xs text-yellow-600 mt-1.5 flex items-start gap-1">
+                  <span className="mt-0.5">⚠</span>
+                  <span>Bei Content-Filter-Problemen neutrale Begriffe verwenden (z.B. &quot;Feuer-Echse&quot; statt Markennamen)</span>
                 </p>
               </div>
             )}
@@ -362,9 +486,7 @@ export default function Home() {
             <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900 border border-slate-700">
               <div>
                 <p className="font-semibold text-slate-200 text-sm">Referenzfoto verwenden</p>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Gesicht der Person für bessere Ähnlichkeit
-                </p>
+                <p className="text-xs text-slate-400 mt-0.5">Gesicht der Person für bessere Ähnlichkeit</p>
               </div>
               <button
                 onClick={() => {
@@ -375,22 +497,15 @@ export default function Home() {
                     setPersonDescription("");
                   }
                 }}
-                className={`w-12 h-6 rounded-full transition-all duration-200 relative ${
-                  useReferenceImage ? "bg-purple-600" : "bg-slate-700"
-                }`}
+                className={`w-12 h-6 rounded-full transition-all duration-200 relative shrink-0 ${useReferenceImage ? "bg-purple-600" : "bg-slate-700"}`}
               >
-                <span
-                  className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200 ${
-                    useReferenceImage ? "left-6" : "left-0.5"
-                  }`}
-                />
+                <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200 ${useReferenceImage ? "left-6" : "left-0.5"}`} />
               </button>
             </div>
 
             {/* Reference image section */}
             {useReferenceImage && (
               <div className="space-y-4">
-                {/* Upload area */}
                 <div
                   onDrop={handleDrop}
                   onDragOver={(e) => e.preventDefault()}
@@ -400,15 +515,9 @@ export default function Home() {
                   {referenceImagePreview ? (
                     <div className="flex items-center gap-4">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={referenceImagePreview}
-                        alt="Referenz"
-                        className="w-16 h-16 object-cover rounded-lg border border-slate-600"
-                      />
+                      <img src={referenceImagePreview} alt="Referenz" className="w-16 h-16 object-cover rounded-lg border border-slate-600" />
                       <div className="text-left">
-                        <p className="text-sm text-slate-200 font-medium">
-                          {referenceImageFile?.name}
-                        </p>
+                        <p className="text-sm text-slate-200 font-medium">{referenceImageFile?.name}</p>
                         <p className="text-xs text-slate-400">Klicken zum Ändern</p>
                       </div>
                     </div>
@@ -416,30 +525,17 @@ export default function Home() {
                     <>
                       <span className="text-3xl block mb-2">📷</span>
                       <p className="text-slate-300 text-sm font-medium">Foto hochladen</p>
-                      <p className="text-slate-500 text-xs mt-1">
-                        Drag & Drop oder klicken · JPG, PNG, WEBP
-                      </p>
+                      <p className="text-slate-500 text-xs mt-1">Drag & Drop oder klicken · JPG, PNG, WEBP</p>
                     </>
                   )}
                 </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleImageUpload(file);
-                  }}
-                />
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); }} />
 
-                {/* Manual description (optional override) */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  <label className="block text-sm font-semibold text-slate-300 mb-1.5">
                     Personenbeschreibung
-                    <span className="text-slate-500 font-normal ml-1.5">
-                      (optional – wird sonst automatisch aus dem Foto generiert)
-                    </span>
+                    <span className="text-slate-500 font-normal ml-1.5">(optional – wird sonst aus Foto generiert)</span>
                   </label>
                   <textarea
                     placeholder="z.B. Junger Mann mit kurzen dunklen Haaren, braunen Augen, leichtem Bart…"
@@ -452,9 +548,7 @@ export default function Home() {
 
                 {autoDescription && (
                   <div className="p-3 rounded-lg bg-slate-800 border border-slate-700">
-                    <p className="text-xs font-semibold text-slate-400 mb-1">
-                      ✨ Auto-generierte Beschreibung:
-                    </p>
+                    <p className="text-xs font-semibold text-slate-400 mb-1">✨ Auto-Beschreibung aus Foto:</p>
                     <p className="text-xs text-slate-300">{autoDescription}</p>
                   </div>
                 )}
@@ -463,25 +557,39 @@ export default function Home() {
 
             {/* Error */}
             {error && (
-              <div className="p-4 rounded-xl bg-red-950/50 border border-red-800 text-red-300 text-sm">
-                <span className="font-semibold">Fehler: </span>
-                {error}
+              <div className="p-4 rounded-xl bg-red-950/50 border border-red-800 text-red-300 text-sm space-y-1">
+                <p><span className="font-semibold">Fehler:</span> {error}</p>
+                {error.toLowerCase().includes("filter") || error.toLowerCase().includes("content") ? (
+                  <p className="text-red-400 text-xs">💡 Tipp: Pokémon-Namen neutraler formulieren, Referenzbild deaktivieren oder anderen Stil wählen.</p>
+                ) : null}
               </div>
             )}
 
-            {/* Generate Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={!canGenerate}
-              className={`w-full py-4 rounded-xl font-bold text-base transition-all duration-200 ${
-                canGenerate
-                  ? "bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-lg hover:shadow-purple-900/50 active:scale-[0.98]"
-                  : "bg-slate-800 text-slate-600 cursor-not-allowed"
-              }`}
-            >
-              {loading ? "Wird generiert…" : "✨ Karte generieren"}
-            </button>
+            {/* Generate + Retry */}
+            <div className="flex gap-2">
+              <button
+                onClick={handleGenerate}
+                disabled={!canGenerate}
+                className={`flex-1 py-4 rounded-xl font-bold text-base transition-all duration-200 ${
+                  canGenerate
+                    ? "bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-lg active:scale-[0.98]"
+                    : "bg-slate-800 text-slate-600 cursor-not-allowed"
+                }`}
+              >
+                {loading ? "Wird generiert…" : "✨ Karte generieren"}
+              </button>
+              {resultImage && !loading && (
+                <button
+                  onClick={runGenerate}
+                  title="Nochmal generieren (gleiche Einstellungen)"
+                  className="px-4 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white transition-colors font-bold"
+                >
+                  🔄
+                </button>
+              )}
+            </div>
 
+            {/* Prompt preview */}
             {selectedPrompt && (
               <details className="group">
                 <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-400 select-none">
@@ -498,26 +606,30 @@ export default function Home() {
           </div>
         </main>
 
-        {/* ── Rechte Spalte: Ergebnis ── */}
+        {/* ── Rechte Spalte: Ergebnis + Verlauf ── */}
         <aside className="w-96 shrink-0 border-l border-slate-800 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="p-3 border-b border-slate-800 flex items-center justify-between">
             <h3 className="font-semibold text-slate-200 text-sm">Generiertes Bild</h3>
             {resultImage && (
-              <button
-                onClick={handleDownload}
-                className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-300 hover:text-white transition-colors"
-              >
-                <span>⬇</span> Download
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={handleDownload}
+                  title="PNG herunterladen"
+                  className="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg px-2 py-1.5 text-slate-300 hover:text-white transition-colors"
+                >
+                  ⬇ PNG
+                </button>
+              </div>
             )}
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {loading ? (
               <LoadingSpinner />
             ) : resultImage ? (
               <div className="space-y-3">
-                <div className="card-aspect w-full max-w-[280px] mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
+                {/* Card preview */}
+                <div className="card-aspect w-full max-w-[240px] mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`data:${resultMimeType};base64,${resultImage}`}
@@ -525,27 +637,85 @@ export default function Home() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="text-center">
-                  <p className="text-xs text-slate-500">
-                    {selectedPrompt?.name} · {holderName}
-                    {pokemonName && ` & ${pokemonName}`}
-                  </p>
+
+                <p className="text-center text-xs text-slate-500">
+                  {selectedPrompt?.name} · {holderName}{pokemonName && ` & ${pokemonName}`}
+                </p>
+
+                {/* Action Buttons */}
+                <div className="space-y-2">
+                  {/* Print button */}
+                  <button
+                    onClick={handlePrint}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+                  >
+                    🖨️ Drucken (A6 · 63×88 mm)
+                  </button>
+
+                  {/* Export print-ready PNG */}
+                  <button
+                    onClick={handleExportPrint}
+                    disabled={exporting}
+                    className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 hover:text-white font-semibold text-sm transition-all flex items-center justify-center gap-2"
+                  >
+                    {exporting ? "Exportiere…" : "💾 PNG Druckgröße (300 DPI · 744×1039 px)"}
+                  </button>
+
+                  {/* Normal download */}
                   <button
                     onClick={handleDownload}
-                    className="mt-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-white font-semibold text-sm transition-all"
+                    className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-slate-200 text-sm transition-all"
                   >
-                    ⬇ Als PNG speichern
+                    ⬇ Web-Qualität herunterladen
                   </button>
+                </div>
+
+                {/* Print info */}
+                <div className="p-3 rounded-lg bg-blue-950/30 border border-blue-900/50 text-xs text-blue-300 space-y-1">
+                  <p className="font-semibold text-blue-200">📐 Druckanleitung</p>
+                  <p>1. &quot;Drucken (A6)&quot; klicken → Druckdialog öffnet sich</p>
+                  <p>2. Papierformat: <strong>A6 (105×148mm)</strong></p>
+                  <p>3. Skalierung: <strong>100% (Ist-Größe)</strong></p>
+                  <p>4. Ränder: <strong>Randlos</strong> (wenn Drucker unterstützt)</p>
+                  <p>5. Ergebnis: Karte exakt <strong>63×88 mm</strong> auf A6</p>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center py-12 gap-3">
-                <div className="w-24 h-32 rounded-xl border-2 border-dashed border-slate-700 flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center h-32 text-center gap-3">
+                <div className="w-20 h-28 rounded-xl border-2 border-dashed border-slate-700 flex items-center justify-center">
                   <span className="text-4xl opacity-30">🃏</span>
                 </div>
-                <p className="text-slate-500 text-sm">
-                  Hier erscheint deine generierte Karte
+                <p className="text-slate-500 text-sm">Hier erscheint deine Karte</p>
+              </div>
+            )}
+
+            {/* Session history */}
+            {history.length > 1 && (
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">
+                  Verlauf dieser Sitzung
                 </p>
+                <div className="grid grid-cols-4 gap-2">
+                  {history.slice(1).map((entry, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setResultImage(entry.imageBase64);
+                        setResultMimeType(entry.mimeType);
+                      }}
+                      className="relative group rounded-lg overflow-hidden border border-slate-700 hover:border-purple-500 transition-all"
+                      title={`${entry.promptName} · ${entry.holderName}`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`data:${entry.mimeType};base64,${entry.imageBase64}`}
+                        alt={entry.promptName}
+                        className="w-full aspect-[5/7] object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all" />
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
