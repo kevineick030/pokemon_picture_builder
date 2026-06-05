@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
       // Step 1: Auto-describe person from reference image if no manual description
       if (referenceImageBase64 && !personDescription) {
-        const visionModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const visionModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
         const visionResult = await visionModel.generateContent([
           {
             inlineData: {
