@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
     // Step 3: Generate the image
     const imageModel = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-preview-image-generation",
+      model: "gemini-2.5-flash-image-preview",
     });
 
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
