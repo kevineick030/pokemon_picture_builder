@@ -52,7 +52,10 @@ export async function POST(req: NextRequest) {
 
     // Step 3: Generate the image
     const imageModel = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image-preview",
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"],
+      } as any,
     });
 
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
@@ -69,12 +72,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const result = await (imageModel as any).generateContent({
-      contents: [{ role: "user", parts: contentParts }],
-      generationConfig: {
-        responseModalities: ["IMAGE", "TEXT"],
-      },
-    });
+    const result = await imageModel.generateContent(contentParts as any);
 
     const response = result.response;
     let imageData: string | null = null;
