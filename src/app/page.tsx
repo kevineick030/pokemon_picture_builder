@@ -59,6 +59,63 @@ const POKEMON_TYPES = [
   "Gift", "Boden", "Flug", "Gestein", "Käfer", "Geist",
 ];
 
+const POKEMON_SUGGESTIONS = [
+  { name: "Glumanda",  emoji: "🔥" }, { name: "Glurak",    emoji: "🔥" },
+  { name: "Schiggy",   emoji: "💧" }, { name: "Turtok",    emoji: "💧" },
+  { name: "Bisasam",   emoji: "🌿" }, { name: "Bisaflor",  emoji: "🌿" },
+  { name: "Pikachu",   emoji: "⚡" }, { name: "Raichu",    emoji: "⚡" },
+  { name: "Evoli",     emoji: "⭐" }, { name: "Relaxo",    emoji: "⭐" },
+  { name: "Gengar",    emoji: "👻" }, { name: "Dragoran",  emoji: "🐉" },
+  { name: "Lucario",   emoji: "👊" }, { name: "Mewtwo",    emoji: "🔮" },
+  { name: "Garados",   emoji: "💧" }, { name: "Lavados",   emoji: "🔥" },
+  { name: "Arktos",    emoji: "❄️" }, { name: "Zapdos",   emoji: "⚡" },
+  { name: "Mew",       emoji: "🔮" }, { name: "Enton",     emoji: "💧" },
+];
+
+const HP_PRESETS = [60, 80, 100, 120, 150, 200, 250];
+
+const ATTACK_BY_TYPE: Record<string, string[]> = {
+  Feuer:   ["Flammenwerfer", "Inferno", "Feuersturm", "Glutatem", "Lavastrom"],
+  Wasser:  ["Aquaknarre", "Surfer", "Wasserfall", "Sprudler", "Aquawelle"],
+  Gras:    ["Rasierblatt", "Blütensturm", "Rankenhieb", "Solarbeam", "Blütenregen"],
+  Elektro: ["Donnerblitz", "Blitz", "Donnerwelle", "Elektroball", "Voltschalter"],
+  Psycho:  ["Psychokinese", "Gedankenwelle", "Zukunftsattacke", "Gedankensturm", "Traumfresser"],
+  Kampf:   ["Karateschlag", "Fauststurm", "Kreuzhieb", "Wuchtschlag", "Sturmangriff"],
+  Dunkel:  ["Dunkelschlag", "Schwarzblick", "Nachthieb", "Bosheitswelle", "Schattenball"],
+  Stahl:   ["Metallklaue", "Klingensturm", "Titanschlag", "Stahlsturm", "Eisenabwehr"],
+  Eis:     ["Eissturm", "Eisstrahl", "Frosthauch", "Blizzard", "Kälteschock"],
+  Drachen: ["Drachenwut", "Drachenpuls", "Drako-Meteor", "Drachenranke", "Dragonstorm"],
+  Fee:     ["Mondblast", "Feenwind", "Zaubersturm", "Mondkraft", "Feenschlag"],
+  Normal:  ["Schnelligkeit", "Körperangriff", "Stampfer", "Rücksturm", "Volltreffer"],
+  Gift:    ["Giftschlag", "Giftstachel", "Säurebad", "Purpurnebel", "Toxi-Sturm"],
+  Boden:   ["Erdbeben", "Sandwirbel", "Bodenschlag", "Sandstrahl", "Gruft"],
+  Flug:    ["Sturzflug", "Windstoß", "Himmelsangriff", "Zugluft", "Windschnitt"],
+  Gestein: ["Steinwurf", "Felssturm", "Klippenschlag", "Steinlawine", "Geröll"],
+  Käfer:   ["Käferschlag", "Bisskraft", "Käfersummen", "Spinnfaden", "Schärfezahn"],
+  Geist:   ["Spukball", "Schattenklinge", "Geisterhand", "Schattensturm", "Grauen"],
+};
+
+const ABILITY_BY_TYPE: Record<string, string[]> = {
+  Feuer:   ["Flammenmantel", "Glutkern", "Feuerschild"],
+  Wasser:  ["Aquabarrier", "Tiefenwacht", "Meeresrauschen"],
+  Gras:    ["Chlorophyll", "Blütenrüstung", "Naturheilung"],
+  Elektro: ["Statikfeld", "Blitzspeicher", "Energiewandlung"],
+  Psycho:  ["Gedankenwall", "Telekinese", "Vorsicht"],
+  Kampf:   ["Kampfgeist", "Eiserner Wille", "Ausdauer"],
+  Dunkel:  ["Schattenmantel", "Finstere Kraft", "Tarnung"],
+  Stahl:   ["Stahlhaut", "Metallreflexe", "Titanwall"],
+  Eis:     ["Frostschild", "Eisrüstung", "Kälteanpassung"],
+  Drachen: ["Drachenstärke", "Schuppenpanzer", "Uralte Macht"],
+  Fee:     ["Feenzauber", "Mondlicht", "Heilaura"],
+  Normal:  ["Durchhaltevermögen", "Glück", "Natürliche Heilung"],
+  Gift:    ["Gifthülle", "Säureschutz", "Toxin"],
+  Boden:   ["Erdfühler", "Sandschutz", "Geophagie"],
+  Flug:    ["Windreiter", "Aufwind", "Leichter Körper"],
+  Gestein: ["Steinrüstung", "Schuttwall", "Felsverstärkung"],
+  Käfer:   ["Insektensinn", "Häutung", "Faden-Wache"],
+  Geist:   ["Schattenkörper", "Fluch", "Ektoplasma"],
+};
+
 // Each type maps to: emoji for UI, glow color for card preview, and palette description for prompt
 const TYPE_CONFIG: Record<string, { emoji: string; glow: string; palette: string }> = {
   Feuer:   { emoji: "🔥", glow: "rgba(234,88,12,0.55)",    palette: "dominating warm fire palette: deep crimson red, molten orange, golden ember glow, charcoal edges" },
@@ -684,6 +741,22 @@ export default function Home() {
                     onChange={(e) => setPokemonName(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30"
                   />
+                  <div className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
+                    {POKEMON_SUGGESTIONS.map((p) => (
+                      <button
+                        key={p.name}
+                        type="button"
+                        onClick={() => setPokemonName(p.name)}
+                        className={`shrink-0 text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                          pokemonName === p.name
+                            ? "bg-purple-700 border-purple-500 text-white"
+                            : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-500"
+                        }`}
+                      >
+                        {p.emoji} {p.name}
+                      </button>
+                    ))}
+                  </div>
                   <p className="text-xs text-yellow-600 mt-1.5 flex items-start gap-1">
                     <span className="mt-0.5">⚠</span>
                     <span>Bei Content-Filter-Problemen neutrale Begriffe verwenden</span>
@@ -799,6 +872,14 @@ export default function Home() {
                           min="10" max="999" step="10"
                           className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-purple-500"
                         />
+                        <div className="flex gap-1 mt-1.5 flex-wrap">
+                          {HP_PRESETS.map((hp) => (
+                            <button key={hp} type="button" onClick={() => updateStat("hp", String(hp))}
+                              className={`text-xs px-2 py-0.5 rounded border transition-colors ${stats.hp === String(hp) ? "bg-purple-700 border-purple-500 text-white" : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"}`}>
+                              {hp}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div>
@@ -807,6 +888,16 @@ export default function Home() {
                         onChange={(e) => updateStat("abilityName", e.target.value)}
                         className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-purple-500"
                       />
+                      {stats.type && ABILITY_BY_TYPE[stats.type] && (
+                        <div className="flex gap-1 mt-1.5 flex-wrap">
+                          {ABILITY_BY_TYPE[stats.type].map((a) => (
+                            <button key={a} type="button" onClick={() => updateStat("abilityName", a)}
+                              className={`text-xs px-2 py-0.5 rounded border transition-colors ${stats.abilityName === a ? "bg-purple-700 border-purple-500 text-white" : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"}`}>
+                              {a}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-slate-400 mb-1">Fähigkeit (Beschreibung)</label>
@@ -822,6 +913,16 @@ export default function Home() {
                           onChange={(e) => updateStat("attack1Name", e.target.value)}
                           className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-purple-500"
                         />
+                        {stats.type && ATTACK_BY_TYPE[stats.type] && (
+                          <div className="flex gap-1 mt-1.5 flex-wrap">
+                            {ATTACK_BY_TYPE[stats.type].map((atk) => (
+                              <button key={atk} type="button" onClick={() => updateStat("attack1Name", atk)}
+                                className={`text-xs px-2 py-0.5 rounded border transition-colors ${stats.attack1Name === atk ? "bg-purple-700 border-purple-500 text-white" : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"}`}>
+                                {atk}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-slate-400 mb-1">Schaden</label>
@@ -838,6 +939,16 @@ export default function Home() {
                           onChange={(e) => updateStat("attack2Name", e.target.value)}
                           className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-purple-500"
                         />
+                        {stats.type && ATTACK_BY_TYPE[stats.type] && (
+                          <div className="flex gap-1 mt-1.5 flex-wrap">
+                            {ATTACK_BY_TYPE[stats.type].slice(0, 5).map((atk) => (
+                              <button key={atk} type="button" onClick={() => updateStat("attack2Name", atk)}
+                                className={`text-xs px-2 py-0.5 rounded border transition-colors ${stats.attack2Name === atk ? "bg-purple-700 border-purple-500 text-white" : "bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700"}`}>
+                                {atk}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-slate-400 mb-1">Schaden</label>
