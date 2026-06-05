@@ -49,7 +49,7 @@ export const PROMPTS: PromptTemplate[] = [
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Gras-Symbol] 'Blütensturm' (fett, schwarz), rechtsbündig '60'. Text: 'Heile 20 Schadenspunkte von diesem Pokémon.'
 * Angriff 2: [Zwei Gras-Symbole] 'Paradieshüter' (fett, schwarz), rechtsbündig '100'.
-* Werte unten: Schwäche Feuer (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern).
+* Werte unten: Weakness Feuer (Symbol x2), Resistance (Symbol -30), Retreat (1 Stern).
 
 **Details:** Unten links 'Illustr. FloralMRC', Set-Infos 'MRC-SIR 01 ★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -158,7 +158,7 @@ Verzauberter Winterwaldszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale au
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Wasser-Symbol] 'Eishauch' (fett, schwarz), rechtsbündig '40'. Text: 'Das gegnerische Pokémon ist jetzt eingefroren.'
 * Angriff 2: [Zwei Wasser-Symbole] 'Polarwirbel' (fett, schwarz), rechtsbündig '90'.
-* Werte unten: Schwäche Feuer (Symbol x2), Resistenz (Symbol -30), Rückzug (2 Sterne).
+* Werte unten: Weakness Feuer (Symbol x2), Resistance (Symbol -30), Retreat (2 Sterne).
 
 **Details:** Unten links 'Illustr. FrostMRC', Set-Infos 'MRC-WINTER 04/10 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -191,7 +191,7 @@ Epische Vulkan-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Re
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Feuer-Symbol] 'Lava-Stoß' (fett, schwarz), rechtsbündig '50'. Text: 'Der Gegner ist jetzt verbrannt.'
 * Angriff 2: [Drei Feuer-Symbole] 'Eruptions-Inferno' (fett, schwarz), rechtsbündig '130'.
-* Werte unten: Schwäche Wasser (Symbol x2), Resistenz (Symbol -30), Rückzug (3 Sterne).
+* Werte unten: Weakness Wasser (Symbol x2), Resistance (Symbol -30), Retreat (3 Sterne).
 
 **Details:** Unten links 'Illustr. VolcanoMRC', Set-Infos 'MRC-FIRE 01/06 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -219,7 +219,7 @@ Dramatische Gewitterszene auf einer Bergkuppe. WICHTIG: Übernimm die exakten Ge
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Blitz-Symbol] 'Sturmladung' (fett, schwarz), rechtsbündig '30'. Text: 'Lade 3 Energien auf dieses Pokémon.'
 * Angriff 2: [Drei Blitz-Symbole] 'Gewitterschlag' (fett, schwarz), rechtsbündig '150'. Text: 'Lege alle Energien ab.'
-* Werte unten: Schwäche Kampf (Symbol x2), Resistenz Stahl (Symbol -30), Rückzug (1 Stern).
+* Werte unten: Weakness Kampf (Symbol x2), Resistance Stahl (Symbol -30), Retreat (1 Stern).
 
 **Details:** Unten links 'Illustr. StormMRC', Set-Infos 'MRC-THUNDER 02/06 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -419,7 +419,7 @@ Epische Action-Szene (Weitwinkel). WICHTIG: Übernimm die exakten Gesichtsmerkma
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Synchron-Schlag' (fett, schwarz), rechtsbündig '50'. Text: 'Fügt 30 Schadenspunkte mehr zu, wenn dieses Pokémon in diesem Zug eingewechselt wurde.'
 * Angriff 2: [Zwei Energie-Symbole] 'Krasse Elementar-Zerstörung' (fett, schwarz), rechtsbündig '120'.
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzugskosten (2 Sterne).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat cost (2 Sterne).
 
 **Details:** Unten links 'Illustr. MyRookieCard Studio', Set-Infos 'MRC-ACT 01/05 ★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -447,7 +447,7 @@ Monumentale Naturgewitter-Szene auf einem Gebirgskamm. WICHTIG: Übernimm die ex
 **Textfelder:**
 * Angriff 1: [Zwei Energie-Symbole] 'Gebirgsblitz' (fett, schwarz), rechtsbündig '90'.
 * Angriff 2: [Drei Energie-Symbole] 'Sturmbrecher-Stoß' (fett, schwarz), rechts '160'. Text: 'Lege alle Energiekarten von diesem Pokémon ab.'
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (3 Sterne).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (3 Sterne).
 
 **Details:** Unten links 'Illustr. StormMRC', Set-Infos 'MRC-ACT 02/05 ★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -475,7 +475,7 @@ Atemberaubende Szene auf einem stürmischen Berg. WICHTIG: Übernimm die exakten
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Urzeitlicher Ruf' (fett, schwarz). Text: 'Durchsuche dein Deck nach einer Item-Karte und nimm sie auf die Hand.'
 * Angriff 2: [Drei Energie-Symbole] 'Zorn der Titanen' (fett, schwarz), rechtsbündig '140'.
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (3 Sterne).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (3 Sterne).
 
 **Details:** Unten links 'Illustr. TitanForge MRC', Set-Infos 'MRC-ACT 03/05 ★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -503,7 +503,7 @@ Action-Szene in der Luft. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus de
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Schallmauer-Durchbruch' (fett, schwarz), rechtsbündig '40'. Text: 'Dieses Pokémon kann im nächsten Zug nicht angegriffen werden.'
 * Angriff 2: [Zwei Energie-Symbole] 'Überschall-Sturm-Anschlag' (fett, schwarz), rechtsbündig '100'.
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (1 Stern).
 
 **Details:** Unten links 'Illustr. VelocityMRC', Set-Infos 'MRC-ACT 04/05 ★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -531,7 +531,7 @@ Epische Unterwasser-Kampfszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale 
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Tiefsee-Sog' (fett, schwarz). Text: 'Tausche das aktive Pokémon deines Gegners gegen 1 Pokémon von seiner Bank aus.'
 * Angriff 2: [Drei Energie-Symbole] 'Abyssale Ozean-Explosion' (fett, schwarz), rechtsbündig '130'.
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (2 Sterne).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (2 Sterne).
 
 **Details:** Unten links 'Illustr. AbyssalMRC', Set-Infos 'MRC-ACT 05/05 ★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -672,7 +672,7 @@ Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Ref
 **Textfelder (Unteres Drittel):**
 * Fähigkeit (Banner): 'Tera-Kristall' Text: 'Solange dieses Pokémon eine Tera-Energiekarte trägt, nimmt es 20 Schadenspunkte weniger.'
 * Angriff: [Vier Energie-Symbole] 'Kristall-Brecher' (fett, schwarz), rechtsbündig '180'.
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (2 Sterne).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (2 Sterne).
 
 **Details:** Unten links 'Illustr. TeraMRC', Set-Infos 'TERA-CRYSTAL 001/001 ★★★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -704,7 +704,7 @@ Eine extrem stilisierte, grafische Illustration. WICHTIG: Übernimm die exakten 
 
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Energie-Symbol] 'Bunter Funke' (fett, schwarz), rechtsbündig '30'. Text: 'Lege 1 Energiekarte von diesem Pokémon ab.'
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (1 Stern).
 
 **Details:** Unten links 'Illustr. VectorStudio', Set-Infos 'MRC-PROMO 01'. Copyright: '© My Rookie Card'.`,
   },
@@ -759,7 +759,7 @@ Eine übertrieben coole und verspielte Illustration mit fetten Linien. WICHTIG: 
 **Textfelder (Unteres Drittel):**
 * Fähigkeit (Rotes Banner): 'Fähigkeit: Letzter Ausweg' Text: 'Einmal während deines Zuges kannst du dein Deck nach einer Unterstützerkarte durchsuchen.'
 * Angriff: [Drei Energie-Symbole] 'Doodle-Schlag' (fett, schwarz), rechtsbündig '60'.
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (1 Stern).
 
 **Details:** Unten links 'Illustr. DoodleArt', Set-Infos 'MRC-PROMO 03'. Copyright: '© My Rookie Card'.`,
   },
@@ -814,7 +814,7 @@ Monumentale, energiegeladene Anime-Illustration. WICHTIG: Übernimm die exakten 
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Drei Energie-Symbole] 'Energie-Welle' (fett, schwarz), rechtsbündig '200'.
 * Angriff 2: [Fünf Energie-Symbole] 'Überlastungs-Strahl' (fett, schwarz). Text: 'Wirf eine Münze. Bei Kopf fügt dieser Angriff jedem Pokémon des Gegners 150 Schaden zu.'
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (3 Sterne).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (3 Sterne).
 
 **Details:** Unten links 'Illustr. EnergyMRC', Set-Infos 'MRC-PROMO 05'. Copyright: '© My Rookie Card'.`,
   },
@@ -982,7 +982,7 @@ Malerische Aquarell-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus d
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Natur-Symbol] 'Farbsturm' (schwarze Tinte, fett), rechtsbündig '60'.
 * Angriff 2: [Zwei Natur-Symbole] 'Aquarell-Welle' (fett), rechtsbündig '100'. Text: 'Heile 30 Schadenspunkte.'
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (1 Stern).
 
 **Details:** Unten links 'Illustr. WatercolorMRC', Set-Infos 'MRC-ART 02/03 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -1011,7 +1011,7 @@ Klassisch gerahmtes Artwork im Original-Pokémon-Stil der 1990er. WICHTIG: Über
 * Klassisches Pokémon-Textfeld: Typ, Länge und Gewicht (fiktiv).
 * Attacke 1: 'Entschlossener Blick' – Kosten: [ColorlessSymbol] – Schaden: 10. Text: 'Zeige deinem Gegner 2 Karten aus deiner Hand.'
 * Attacke 2: 'Team-Angriff' – Kosten: [ColorlessSymbol][ColorlessSymbol] – Schaden: 30.
-* Unten: Schwäche, Widerstand, Rückzugskosten im klassischen 1999-Format.
+* Unten: Weakness, Resistance, Retreat cost im klassischen 1999-Format.
 
 **Details:** Klassischer Pokémon-Copyright-Hinweis-Stil. Set-Nr. '001/102'. Copyright: '© My Rookie Card Base Set'.`,
   },
@@ -1038,7 +1038,7 @@ Ultraniede Chibi-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale a
 
 **Textfelder (Unteres Drittel, pastelliger Hintergrund):**
 * Attacke: [Herz-Symbol] 'Chibi-Bumms' (fett), rechtsbündig '20'. Text: 'Der Gegner findet diese Attacke sooo niedlich und kann 1 Zug lang nicht angreifen.'
-* Werte unten: Schwäche (Symbol x2), Resistenz (Symbol -30), Rückzug (1 Stern ⭐).
+* Werte unten: Weakness (Symbol x2), Resistance (Symbol -30), Retreat (1 Stern ⭐).
 
 **Details:** Unten links 'Illustr. ChibiMRC', Set-Infos 'MRC-CUTE 01 ❤'. Copyright: '© My Rookie Card'.`,
   },
