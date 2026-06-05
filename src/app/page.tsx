@@ -88,15 +88,29 @@ const PRINT_H = Math.round((88 / 25.4) * 300); // 1039 px
 
 // ── Utilities ──────────────────────────────────────────────────────────────
 
-function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }> {
+// Resize image to max 1024px and re-encode as JPEG to keep payload small
+function resizeImageToBase64(
+  file: File,
+  maxDim = 1024,
+  quality = 0.85
+): Promise<{ base64: string; mimeType: string }> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      resolve({ base64: result.split(",")[1], mimeType: file.type });
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL("image/jpeg", quality);
+      resolve({ base64: dataUrl.split(",")[1], mimeType: "image/jpeg" });
     };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+    img.onerror = reject;
+    img.src = url;
   });
 }
 
@@ -355,7 +369,7 @@ export default function Home() {
     let referenceImageMimeType: string | undefined;
 
     if (useReferenceImage && referenceImageFile) {
-      const { base64, mimeType } = await fileToBase64(referenceImageFile);
+      const { base64, mimeType } = await resizeImageToBase64(referenceImageFile);
       referenceImageBase64 = base64;
       referenceImageMimeType = mimeType;
     }
@@ -377,7 +391,16 @@ export default function Home() {
       }),
     });
 
-    const data = await res.json();
+    let data: any;
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error(
+        res.status === 413
+          ? "Bild zu groß für den Server – bitte ein kleineres Foto verwenden."
+          : `Server-Fehler ${res.status}: ${res.statusText}`
+      );
+    }
     if (!res.ok) throw new Error(data.error || "Fehler bei der Generierung.");
     return {
       imageBase64: data.imageBase64,

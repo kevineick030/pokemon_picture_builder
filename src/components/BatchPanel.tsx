@@ -113,7 +113,12 @@ export default function BatchPanel({ selectedPrompt, stats, onClose }: BatchPane
             statsAppendix,
           }),
         });
-        const data = await res.json();
+        let data: any;
+        try {
+          data = await res.json();
+        } catch {
+          throw new Error(`Server-Fehler ${res.status}: ${res.statusText}`);
+        }
         if (!res.ok) throw new Error(data.error || "Fehler");
         setItems((prev) =>
           prev.map((it, idx) =>
