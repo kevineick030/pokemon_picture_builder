@@ -51,11 +51,20 @@ export async function POST(req: NextRequest) {
         if (hpMatch) {
           templateText = templateText.replace(/'?\d{2,3} HP'?/g, `'${hpMatch[1]} HP'`);
         }
+        // Extract user attack names to avoid duplicates with template hardcoded attacks
+        const attack1Match = statsAppendix.match(/Angriff 1: '([^']+)'/);
+        const attack2Match = statsAppendix.match(/Angriff 2: '([^']+)'/);
+        const hasCustomAttacks = attack1Match || attack2Match;
+
         // Put user stats BEFORE the template so they take priority
-        const overrideBlock = statsAppendix.replace(
+        let overrideBlock = statsAppendix.replace(
           "WICHTIGE KARTEN-DETAILS (müssen exakt so auf der Karte erscheinen):",
           "VERBINDLICHE KARTEN-WERTE – diese überschreiben alle anderen Werte weiter unten:"
         );
+        if (hasCustomAttacks) {
+          const attackNames = [attack1Match?.[1], attack2Match?.[1]].filter(Boolean).join(" und ");
+          overrideBlock += `\n\nWICHTIG: Auf der Karte dürfen NUR die oben genannten Angriffe erscheinen (${attackNames}). Alle anderen Angriffsnamen aus dem Template darunter werden IGNORIERT und dürfen NICHT auf der Karte erscheinen. Kein Angriff darf doppelt vorkommen.`;
+        }
         finalPrompt = overrideBlock + "\n\n---\n\n" + templateText;
       } else {
         finalPrompt = templateText;

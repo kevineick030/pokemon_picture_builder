@@ -3,7 +3,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { PROMPTS, CATEGORIES, type PromptTemplate } from "@/data/prompts";
 import { addDpiMetadataToPng } from "@/lib/zip-png";
-import { paintStatsBar } from "@/lib/stats-bar";
 import BatchPanel from "@/components/BatchPanel";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -392,6 +391,7 @@ export default function Home() {
   const [exporting, setExporting] = useState(false);
   const [showBatch, setShowBatch] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>("form");
+  const [loadingStep, setLoadingStep] = useState<string>("Karte wird generiert…");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -468,26 +468,8 @@ export default function Home() {
   };
 
   const persistResult = async (result: GenerateResult) => {
-    let finalBase64 = result.imageBase64;
-    let finalMime = result.mimeType;
-
-    // Composite a clean stats bar if any stats are filled
-    if (stats.type || stats.hp || stats.attack1Name) {
-      const tc = TYPE_CONFIG[stats.type];
-      const weaknessType = stats.type ? `${tc?.emoji ?? ""}` : "—";
-      const retreatCount = stats.attack2Damage ? 2 : stats.attack1Damage ? 1 : 1;
-      try {
-        finalBase64 = await paintStatsBar({
-          imageBase64: result.imageBase64,
-          mimeType: result.mimeType,
-          weaknessLabel: `${weaknessType} ×2`,
-          resistanceLabel: `−30`,
-          retreatStars: retreatCount,
-          typeColor: tc?.glow.replace("0.55", "1") ?? "#6d28d9",
-        });
-        finalMime = "image/png";
-      } catch { /* leave original if canvas fails */ }
-    }
+    const finalBase64 = result.imageBase64;
+    const finalMime = result.mimeType;
 
     setResultImage(finalBase64);
     setResultMimeType(finalMime);
@@ -537,13 +519,31 @@ export default function Home() {
     setLoading(true);
     setError(null);
     setVariants(null);
-    try {
-      const result = await callGenerateApi();
-      await persistResult(result);
-    } catch (err: any) {
-      setError(err.message || "Netzwerkfehler");
-    } finally {
-      setLoading(false);
+    if (useReferenceImage && referenceImageFile) {
+      setLoadingStep("📸 Foto wird analysiert…");
+      const stepTimer = setTimeout(() => setLoadingStep("🎨 Karte wird generiert…"), 6000);
+      try {
+        const result = await callGenerateApi();
+        clearTimeout(stepTimer);
+        await persistResult(result);
+      } catch (err: any) {
+        clearTimeout(stepTimer);
+        setError(err.message || "Netzwerkfehler");
+      } finally {
+        setLoading(false);
+        setLoadingStep("Karte wird generiert…");
+      }
+    } else {
+      setLoadingStep("🎨 Karte wird generiert…");
+      try {
+        const result = await callGenerateApi();
+        await persistResult(result);
+      } catch (err: any) {
+        setError(err.message || "Netzwerkfehler");
+      } finally {
+        setLoading(false);
+        setLoadingStep("Karte wird generiert…");
+      }
     }
   };
 
@@ -1137,7 +1137,7 @@ export default function Home() {
               <div className="p-4 space-y-3">
                 {/* Loading state */}
                 {(loading || variantLoading) && (
-                  <LoadingSpinner label={variantLoading ? "2 Varianten werden generiert…" : "Karte wird generiert…"} />
+                  <LoadingSpinner label={variantLoading ? "2 Varianten werden generiert…" : loadingStep} />
                 )}
 
                 {/* Variant comparison */}
@@ -1173,7 +1173,7 @@ export default function Home() {
                 {/* Single result */}
                 {!isLoading && !variants && resultImage && (
                   <>
-                    <div className="card-aspect w-full max-w-[240px] mx-auto rounded-2xl overflow-hidden shadow-2xl" style={cardStyle}>
+                    <div className="card-aspect w-full max-w-[300px] mx-auto rounded-2xl overflow-hidden shadow-2xl" style={cardStyle}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={`data:${resultMimeType};base64,${resultImage}`} alt="Generierte Karte"
                         className="w-full h-full object-contain" />
@@ -1185,6 +1185,30 @@ export default function Home() {
 
                     {/* Action buttons */}
                     <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={async () => {
+                            if (typeof navigator.share === "function") {
+                              try {
+                                const blob = await fetch(`data:${resultMimeType};base64,${resultImage}`).then(r => r.blob());
+                                const ext = resultMimeType.includes("png") ? "png" : "jpg";
+                                const file = new File([blob], `${holderName || "karte"}.${ext}`, { type: resultMimeType });
+                                await navigator.share({ files: [file], title: "My Rookie Card" });
+                              } catch { /* user cancelled or not supported */ }
+                            } else {
+                              handleDownload();
+                            }
+                          }}
+                          className="py-3 rounded-xl bg-gradient-to-r from-green-700 to-emerald-700 hover:from-green-600 hover:to-emerald-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-1.5">
+                          📤 Teilen
+                        </button>
+                        <button
+                          onClick={runGenerate}
+                          className="py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-purple-600/50 text-purple-300 hover:text-purple-200 font-bold text-sm transition-all flex items-center justify-center gap-1.5">
+                          🔄 Nochmal
+                        </button>
+                      </div>
+
                       <button onClick={() => openPrintWindow(resultImage, resultMimeType)}
                         className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
                         🖨️ Einzeln drucken (A6 · 63×88 mm)
