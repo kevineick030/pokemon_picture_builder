@@ -150,12 +150,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Step 3: Generate the image.
-    // The reference photo is intentionally NOT sent to the image model — only the
-    // text description from the vision step is used. Sending the raw photo causes
-    // the model to paste the person in photorealistically instead of drawing them
-    // in the anime/TCG illustration style.
+    // EXPERIMENTELL: Das Referenzfoto wird ZUSÄTZLICH zur Textbeschreibung ans Bildmodell
+    // geschickt, damit die Person besser erkennbar ist. Risiko: fotorealistischer Stil.
+    // Der GLOBAL_STYLE_PREFIX hat verstärkte Anime-Regeln dagegen.
+    //
+    // REVERT (falls Qualitätsprobleme): contentParts auf nur [{ text: finalPrompt }] reduzieren
+    // und den FOTO_STYLE_BOOSTER-Block entfernen.
+    let promptForImageModel = finalPrompt;
+    if (referenceImageBase64) {
+      // Verstärke die Anime-Stil-Anweisung wenn ein Foto mitgeschickt wird
+      const FOTO_STYLE_BOOSTER = `\n\nREFERENZFOTO-HINWEIS (höchste Priorität): Das beigefügte Foto zeigt die reale Person. Übernimm NUR die charakteristischen Gesichtszüge (Haarfarbe, Haarstil, Augenform, Augenfarbe, Gesichtsform, markante Merkmale). Zeichne diese Person KOMPLETT NEU als handgezeichneten Anime/Manga-Charakter im Pokémon TCG Illustrationsstil. ABSOLUT KEIN Foto-Realismus, KEIN Photo-Compositing, KEINE Foto-Textur. Die Person ist eine gemalte Anime-Figur – wie von einem professionellen TCG-Illustrator gezeichnet.`;
+      promptForImageModel = finalPrompt + FOTO_STYLE_BOOSTER;
+    }
+
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
-      { text: finalPrompt },
+      { text: promptForImageModel },
+      // Foto mitschicken für bessere Ähnlichkeit (experimentell – siehe Kommentar oben)
+      ...(referenceImageBase64
+        ? [{ inlineData: { mimeType: referenceImageMimeType || "image/jpeg", data: referenceImageBase64 } }]
+        : []),
     ];
 
     // Build the ordered list of image models to try. Start with the configured
