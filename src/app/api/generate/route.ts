@@ -4,10 +4,10 @@ import { PROMPTS } from "@/data/prompts";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
+// Primary: gemini-3-pro-image-preview — best quality, paid tier required.
+// Falls back automatically to gemini-2.5-flash-image (free tier) if not available.
 // Override via GEMINI_IMAGE_MODEL env var if needed.
-// gemini-2.5-flash-image ("Nano Banana") has a real free API tier (500 req/day).
-// gemini-3-pro-image ("Nano Banana Pro") is paid-only — no free API tier.
-const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";
+const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image-preview";
 
 // Vision model for describing the reference photo. gemini-2.0-flash was retired
 // by Google; gemini-2.5-flash is the current, widely available successor.
@@ -112,9 +112,9 @@ export async function POST(req: NextRequest) {
     // route resilient to model IDs being renamed / gated per API key.
     const candidateModels = Array.from(new Set([
       IMAGE_MODEL,
-      "gemini-2.5-flash-image",
       "gemini-3-pro-image-preview",
       "gemini-3.1-flash-image-preview",
+      "gemini-2.5-flash-image",
       "gemini-2.0-flash-preview-image-generation",
     ]));
 
