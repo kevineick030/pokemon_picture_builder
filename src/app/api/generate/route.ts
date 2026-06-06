@@ -43,13 +43,27 @@ export async function POST(req: NextRequest) {
       }
 
       // Step 2: Replace placeholders in the template
-      finalPrompt = template.template
+      let templateText = template.template
         .replace(/\[HOLDER_NAME\]/g, holderName || "")
         .replace(/\[POKEMON_NAME\]/g, pokemonName || "")
         .replace(/\[FOTO_BESCHREIBUNG_DER_PERSON\]/g, fotoDescription);
 
       if (statsAppendix) {
-        finalPrompt += statsAppendix;
+        // Extract HP from appendix and replace it directly in the template so it overrides the hardcoded value
+        const hpMatch = statsAppendix.match(/HP: exakt '(\d+) HP'/);
+        if (hpMatch) {
+          templateText = templateText.replace(/'?\d{2,3} HP'?/g, `'${hpMatch[1]} HP'`);
+        }
+
+        // Put user stats BEFORE the template so they take priority over hardcoded template values
+        const overrideBlock = statsAppendix
+          .replace(
+            "WICHTIGE KARTEN-DETAILS (müssen exakt so auf der Karte erscheinen):",
+            "VERBINDLICHE KARTEN-WERTE – diese überschreiben alle anderen Werte weiter unten:"
+          );
+        finalPrompt = overrideBlock + "\n\n---\n\n" + templateText;
+      } else {
+        finalPrompt = templateText;
       }
     }
 
