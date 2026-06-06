@@ -13,6 +13,17 @@ const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";
 // by Google; gemini-2.5-flash is the current, widely available successor.
 const VISION_MODEL = process.env.GEMINI_VISION_MODEL || "gemini-2.5-flash";
 
+// Prepended to every prompt to enforce anime style for people and correct text spelling.
+const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, überschreiben alles andere):
+
+1. PERSONENSTIL: Jede Person auf dieser Karte MUSS vollständig im authentischen Pokémon TCG Anime-Illustrationsstil gezeichnet sein – als handgezeichneter Anime-Charakter mit Cel-Shading, sauberen schwarzen Outlines und stilisierten Zügen. ABSOLUT KEIN fotografischer Realismus. KEINE Foto-Montage. KEIN Photo-Compositing. Die Person ist eine GEZEICHNETE Anime-Figur, nicht ein eingearbeitetes Foto. Die Gesichtsmerkmale aus der Beschreibung werden übernommen, aber komplett im Anime/TCG-Zeichenstil neu interpretiert und gemalt.
+
+2. TEXTE: Alle Texte auf der Karte müssen korrekt buchstabiert und gut lesbar sein. Keine Phantomzeichen, keine verdrehten Buchstaben, kein Kauderwelsch. Angriffsnamen, HP-Werte und Kartentitel exakt so schreiben wie angegeben.
+
+---
+
+`;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -81,25 +92,20 @@ export async function POST(req: NextRequest) {
           const attackNames = [attack1Match?.[1], attack2Match?.[1]].filter(Boolean).join(" und ");
           overrideBlock += `\n\nWICHTIG: Auf der Karte dürfen NUR die oben genannten Angriffe erscheinen (${attackNames}). Alle anderen Angriffsnamen aus dem Template darunter werden IGNORIERT und dürfen NICHT auf der Karte erscheinen. Kein Angriff darf doppelt vorkommen.`;
         }
-        finalPrompt = overrideBlock + "\n\n---\n\n" + templateText;
+        finalPrompt = GLOBAL_STYLE_PREFIX + overrideBlock + "\n\n---\n\n" + templateText;
       } else {
-        finalPrompt = templateText;
+        finalPrompt = GLOBAL_STYLE_PREFIX + templateText;
       }
     }
 
-    // Step 3: Generate the image
+    // Step 3: Generate the image.
+    // The reference photo is intentionally NOT sent to the image model — only the
+    // text description from the vision step is used. Sending the raw photo causes
+    // the model to paste the person in photorealistically instead of drawing them
+    // in the anime/TCG illustration style.
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
       { text: finalPrompt },
     ];
-
-    if (referenceImageBase64) {
-      contentParts.push({
-        inlineData: {
-          mimeType: referenceImageMimeType || "image/jpeg",
-          data: referenceImageBase64,
-        },
-      });
-    }
 
     // Build the ordered list of image models to try. Start with the configured
     // one, then fall back to other known image-capable model IDs. This makes the
