@@ -87,30 +87,91 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const result = await ai.models.generateContent({
-      model: IMAGE_MODEL,
-      contents: [{ role: "user", parts: contentParts }],
-      config: {
-        responseModalities: [Modality.IMAGE, Modality.TEXT],
-      },
-    });
+    // Build the ordered list of image models to try. Start with the configured
+    // one, then fall back to other known image-capable model IDs. This makes the
+    // route resilient to model IDs being renamed / gated per API key.
+    const candidateModels = Array.from(new Set([
+      IMAGE_MODEL,
+      "gemini-2.5-flash-image",
+      "gemini-3-pro-image-preview",
+      "gemini-3.1-flash-image-preview",
+      "gemini-2.0-flash-preview-image-generation",
+    ]));
+
+    const tryGenerate = async (model: string) => {
+      const result = await ai.models.generateContent({
+        model,
+        contents: [{ role: "user", parts: contentParts }],
+        config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
+      });
+      let imageData: string | null = null;
+      let imageMimeType = "image/png";
+      let textResponse = "";
+      for (const candidate of result.candidates ?? []) {
+        for (const part of candidate.content?.parts ?? []) {
+          if (part.inlineData?.data) {
+            imageData = part.inlineData.data;
+            imageMimeType = part.inlineData.mimeType ?? "image/png";
+          } else if (part.text) {
+            textResponse += part.text;
+          }
+        }
+      }
+      return { imageData, imageMimeType, textResponse };
+    };
 
     let imageData: string | null = null;
     let imageMimeType = "image/png";
     let textResponse = "";
+    let usedModel = "";
+    const modelErrors: Record<string, string> = {};
 
-    for (const candidate of result.candidates ?? []) {
-      for (const part of candidate.content?.parts ?? []) {
-        if (part.inlineData?.data) {
-          imageData = part.inlineData.data;
-          imageMimeType = part.inlineData.mimeType ?? "image/png";
-        } else if (part.text) {
-          textResponse += part.text;
+    for (const model of candidateModels) {
+      try {
+        const out = await tryGenerate(model);
+        textResponse = out.textResponse;
+        if (out.imageData) {
+          imageData = out.imageData;
+          imageMimeType = out.imageMimeType;
+          usedModel = model;
+          break;
+        }
+        // No image but model responded (content filter) — stop trying others.
+        usedModel = model;
+        break;
+      } catch (e: any) {
+        const msg = e?.message || String(e);
+        modelErrors[model] = msg;
+        // Only fall through to the next candidate on availability errors.
+        if (!/not found|NOT_FOUND|404|not supported|PERMISSION|403/i.test(msg)) {
+          throw e;
         }
       }
     }
 
     if (!imageData) {
+      // If every model was unavailable, ask the key what it actually offers.
+      if (Object.keys(modelErrors).length === candidateModels.length) {
+        let available: string[] = [];
+        try {
+          const pager = await ai.models.list({ config: { queryBase: true } });
+          for await (const m of pager) {
+            const name = (m.name ?? "").replace(/^models\//, "");
+            const actions = m.supportedActions ?? [];
+            if (name.includes("image") || actions.includes("predict")) available.push(name);
+          }
+        } catch { /* listing may also be denied */ }
+        return NextResponse.json(
+          {
+            error: available.length
+              ? `Keines der getesteten Bild-Modelle ist für diesen API-Key freigeschaltet. Verfügbare Bild-Modelle für deinen Key: ${available.join(", ")}. Setze GEMINI_IMAGE_MODEL auf eines davon.`
+              : `Dieser API-Key hat KEINEN Zugriff auf Bild-Generierungs-Modelle. Das ist meist ein Region-/Billing-Problem: In Google AI Studio muss für das Projekt die Abrechnung aktiviert sein, oder Bild-Generierung ist in deiner Region (EU) nur mit Billing verfügbar.`,
+            details: JSON.stringify(modelErrors),
+            availableImageModels: available,
+          },
+          { status: 404 }
+        );
+      }
       return NextResponse.json(
         { error: "Kein Bild generiert. Möglicherweise hat der Content-Filter angesprochen. Versuche es ohne Referenzbild oder ändere den Pokémon-Namen.", details: textResponse },
         { status: 422 }
@@ -121,6 +182,7 @@ export async function POST(req: NextRequest) {
       imageBase64: imageData,
       mimeType: imageMimeType,
       personDescription: fotoDescription,
+      usedModel,
     });
   } catch (err: any) {
     console.error("Gemini API Error:", err);
