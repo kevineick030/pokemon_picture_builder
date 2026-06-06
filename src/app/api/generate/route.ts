@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Prompt nicht gefunden" }, { status: 400 });
       }
 
-      // Step 1: Auto-describe person from reference image (always runs when photo is uploaded)
+      // Step 1: Auto-describe person from reference image (always when photo uploaded)
       if (referenceImageBase64) {
         const visionResult = await ai.models.generateContent({
           model: "gemini-2.0-flash",
@@ -36,10 +36,7 @@ export async function POST(req: NextRequest) {
           }],
         });
         const autoDesc = (visionResult.text ?? "").trim();
-        // Combine auto-description with any manual additions from the user
-        fotoDescription = personDescription
-          ? `${autoDesc} ${personDescription}`
-          : autoDesc;
+        fotoDescription = personDescription ? `${autoDesc} ${personDescription}` : autoDesc;
       }
 
       // Step 2: Replace placeholders in the template
@@ -49,88 +46,64 @@ export async function POST(req: NextRequest) {
         .replace(/\[FOTO_BESCHREIBUNG_DER_PERSON\]/g, fotoDescription);
 
       if (statsAppendix) {
-        // Extract HP from appendix and replace it directly in the template so it overrides the hardcoded value
+        // Replace HP value directly in template so it overrides hardcoded value
         const hpMatch = statsAppendix.match(/HP: exakt '(\d+) HP'/);
         if (hpMatch) {
           templateText = templateText.replace(/'?\d{2,3} HP'?/g, `'${hpMatch[1]} HP'`);
         }
-
-        // Put user stats BEFORE the template so they take priority over hardcoded template values
-        const overrideBlock = statsAppendix
-          .replace(
-            "WICHTIGE KARTEN-DETAILS (müssen exakt so auf der Karte erscheinen):",
-            "VERBINDLICHE KARTEN-WERTE – diese überschreiben alle anderen Werte weiter unten:"
-          );
+        // Put user stats BEFORE the template so they take priority
+        const overrideBlock = statsAppendix.replace(
+          "WICHTIGE KARTEN-DETAILS (müssen exakt so auf der Karte erscheinen):",
+          "VERBINDLICHE KARTEN-WERTE – diese überschreiben alle anderen Werte weiter unten:"
+        );
         finalPrompt = overrideBlock + "\n\n---\n\n" + templateText;
       } else {
         finalPrompt = templateText;
       }
     }
 
-    // Step 3: Generate the image — try each model/method until one works
-    let imageData: string | null = null;
-    let imageMimeType = "image/jpeg";
-
-    const modelsToTry = [
-      IMAGE_MODEL,
-      ...(IMAGE_MODEL !== "gemini-3-pro-image" ? ["gemini-3-pro-image"] : []),
-      "gemini-2.5-flash-image",
-      "gemini-3.1-flash-image",
+    // Step 3: Generate the image
+    const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
+      { text: finalPrompt },
     ];
 
-    const errors: string[] = [];
+    if (referenceImageBase64) {
+      contentParts.push({
+        inlineData: {
+          mimeType: referenceImageMimeType || "image/jpeg",
+          data: referenceImageBase64,
+        },
+      });
+    }
 
-    for (const model of modelsToTry) {
-      if (imageData) break;
+    const result = await ai.models.generateContent({
+      model: IMAGE_MODEL,
+      contents: [{ role: "user", parts: contentParts }],
+      config: {
+        responseModalities: [Modality.IMAGE, Modality.TEXT],
+      },
+    });
 
-      // Try generateContent (works for gemini image models)
-      try {
-        const result = await ai.models.generateContent({
-          model,
-          contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
-          config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
-        });
-        for (const candidate of result.candidates ?? []) {
-          for (const part of candidate.content?.parts ?? []) {
-            if (part.inlineData?.data) {
-              imageData = part.inlineData.data;
-              imageMimeType = part.inlineData.mimeType ?? "image/jpeg";
-            }
-          }
+    let imageData: string | null = null;
+    let imageMimeType = "image/png";
+    let textResponse = "";
+
+    for (const candidate of result.candidates ?? []) {
+      for (const part of candidate.content?.parts ?? []) {
+        if (part.inlineData?.data) {
+          imageData = part.inlineData.data;
+          imageMimeType = part.inlineData.mimeType ?? "image/png";
+        } else if (part.text) {
+          textResponse += part.text;
         }
-        if (imageData) break;
-      } catch (e: any) {
-        errors.push(`${model}/generateContent: ${e?.message}`);
-      }
-
-      if (imageData) break;
-
-      // Try generateImages (works for imagen-style models)
-      try {
-        const imgResult = await ai.models.generateImages({
-          model,
-          prompt: finalPrompt,
-          config: { numberOfImages: 1, outputMimeType: "image/jpeg" } as any,
-        });
-        const raw = imgResult.generatedImages?.[0]?.image?.imageBytes;
-        if (raw) {
-          imageData = typeof raw === "string" ? raw : Buffer.from(raw as Uint8Array).toString("base64");
-          imageMimeType = "image/jpeg";
-        }
-      } catch (e: any) {
-        errors.push(`${model}/generateImages: ${e?.message}`);
       }
     }
 
     if (!imageData) {
       return NextResponse.json(
-        { error: "Kein Bild generiert – alle Modelle fehlgeschlagen.", details: errors.join(" | ") },
+        { error: "Kein Bild generiert. Möglicherweise hat der Content-Filter angesprochen. Versuche es ohne Referenzbild oder ändere den Pokémon-Namen.", details: textResponse },
         { status: 422 }
       );
-    }
-
-    if (!imageData) {
-      return NextResponse.json({ error: "Kein Bild generiert." }, { status: 422 });
     }
 
     return NextResponse.json({
@@ -140,17 +113,16 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: any) {
     console.error("Gemini API Error:", err);
-    const raw = err?.message || "Unbekannter Fehler";
-    const status = err?.status ?? err?.httpError?.status ?? 500;
-    if (/not found|NOT_FOUND|404/i.test(raw) || status === 404) {
+    const raw = err?.message || "Unbekannter Fehler bei der Bildgenerierung";
+    if (/not found|NOT_FOUND|404/i.test(raw)) {
       return NextResponse.json(
         {
-          error: `Das Bild-Modell '${IMAGE_MODEL}' ist für diesen API-Key nicht verfügbar.`,
+          error: `Das Bild-Modell '${IMAGE_MODEL}' ist für diesen API-Key nicht verfügbar. Prüfe in Google AI Studio, ob das Modell freigeschaltet ist, oder setze die Umgebungsvariable GEMINI_IMAGE_MODEL auf ein verfügbares Modell.`,
           details: raw,
         },
         { status: 404 }
       );
     }
-    return NextResponse.json({ error: raw, details: String(err) }, { status: 500 });
+    return NextResponse.json({ error: raw }, { status: 500 });
   }
 }
