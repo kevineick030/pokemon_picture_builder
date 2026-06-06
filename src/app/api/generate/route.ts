@@ -9,6 +9,10 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 // gemini-3-pro-image ("Nano Banana Pro") is paid-only — no free API tier.
 const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";
 
+// Vision model for describing the reference photo. gemini-2.0-flash was retired
+// by Google; gemini-2.5-flash is the current, widely available successor.
+const VISION_MODEL = process.env.GEMINI_VISION_MODEL || "gemini-2.5-flash";
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -25,20 +29,30 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Prompt nicht gefunden" }, { status: 400 });
       }
 
-      // Step 1: Auto-describe person from reference image (always when photo uploaded)
+      // Step 1: Auto-describe person from reference image (always when photo uploaded).
+      // Non-fatal: if the vision step fails, fall back to the manual description
+      // (or no description) so image generation is still attempted.
       if (referenceImageBase64) {
-        const visionResult = await ai.models.generateContent({
-          model: "gemini-2.0-flash",
-          contents: [{
-            role: "user",
-            parts: [
-              { inlineData: { mimeType: referenceImageMimeType || "image/jpeg", data: referenceImageBase64 } },
-              { text: `Beschreibe die Person auf diesem Foto in 2-3 Sätzen für eine Anime/TCG-Karten-Illustration. Fokussiere dich auf: Geschlecht, Haarfarbe, Haarstil, Augenfarbe, Hautton, markante Gesichtsmerkmale. Formuliere die Beschreibung so, dass ein Bildgenerator damit die Person erkennen und zeichnen kann. Beispiel: "Eine junge Frau mit langen dunklen Haaren, braunen Augen, heller Haut und einem freundlichen Lächeln." Antworte nur mit der Beschreibung, ohne Erklärungen.` },
-            ],
-          }],
-        });
-        const autoDesc = (visionResult.text ?? "").trim();
-        fotoDescription = personDescription ? `${autoDesc} ${personDescription}` : autoDesc;
+        try {
+          // gemini-2.0-flash was retired by Google — use a current vision model.
+          const visionResult = await ai.models.generateContent({
+            model: VISION_MODEL,
+            contents: [{
+              role: "user",
+              parts: [
+                { inlineData: { mimeType: referenceImageMimeType || "image/jpeg", data: referenceImageBase64 } },
+                { text: `Beschreibe die Person auf diesem Foto in 2-3 Sätzen für eine Anime/TCG-Karten-Illustration. Fokussiere dich auf: Geschlecht, Haarfarbe, Haarstil, Augenfarbe, Hautton, markante Gesichtsmerkmale. Formuliere die Beschreibung so, dass ein Bildgenerator damit die Person erkennen und zeichnen kann. Beispiel: "Eine junge Frau mit langen dunklen Haaren, braunen Augen, heller Haut und einem freundlichen Lächeln." Antworte nur mit der Beschreibung, ohne Erklärungen.` },
+              ],
+            }],
+          });
+          const autoDesc = (visionResult.text ?? "").trim();
+          if (autoDesc) {
+            fotoDescription = personDescription ? `${autoDesc} ${personDescription}` : autoDesc;
+          }
+        } catch (visionErr) {
+          console.error("Vision step failed, continuing without auto-description:", visionErr);
+          // fotoDescription stays as the manual personDescription (may be empty)
+        }
       }
 
       // Step 2: Replace placeholders in the template
