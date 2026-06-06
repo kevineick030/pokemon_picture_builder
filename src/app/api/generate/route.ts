@@ -5,7 +5,9 @@ import { PROMPTS } from "@/data/prompts";
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 // Override via GEMINI_IMAGE_MODEL env var if needed.
-const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image";
+// gemini-2.5-flash-image ("Nano Banana") has a real free API tier (500 req/day).
+// gemini-3-pro-image ("Nano Banana Pro") is paid-only — no free API tier.
+const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";
 
 export async function POST(req: NextRequest) {
   try {
