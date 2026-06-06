@@ -49,19 +49,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Step 3: Generate the image
+    // Step 3: Generate the image (text-only prompt — image models don't accept image input)
     const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
       { text: finalPrompt },
     ];
-
-    if (referenceImageBase64) {
-      contentParts.push({
-        inlineData: {
-          mimeType: referenceImageMimeType || "image/jpeg",
-          data: referenceImageBase64,
-        },
-      });
-    }
 
     const result = await ai.models.generateContent({
       model: IMAGE_MODEL,
