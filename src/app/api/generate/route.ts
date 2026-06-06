@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Prompt nicht gefunden" }, { status: 400 });
       }
 
-      // Step 1: Auto-describe person from reference image if no manual description
-      if (referenceImageBase64 && !personDescription) {
+      // Step 1: Auto-describe person from reference image (always runs when photo is uploaded)
+      if (referenceImageBase64) {
         const visionResult = await ai.models.generateContent({
           model: "gemini-2.0-flash",
           contents: [{
@@ -35,7 +35,11 @@ export async function POST(req: NextRequest) {
             ],
           }],
         });
-        fotoDescription = (visionResult.text ?? "").trim();
+        const autoDesc = (visionResult.text ?? "").trim();
+        // Combine auto-description with any manual additions from the user
+        fotoDescription = personDescription
+          ? `${autoDesc} ${personDescription}`
+          : autoDesc;
       }
 
       // Step 2: Replace placeholders in the template
