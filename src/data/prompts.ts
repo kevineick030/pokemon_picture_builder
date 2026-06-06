@@ -670,7 +670,7 @@ Edles, goldenes Porträt im Gold-Rare-Stil. WICHTIG: Übernimm die exakten Gesic
 Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht neben ihrem [POKEMON_NAME] in einer Tera-Kristall-Formation – gigantische prismatische Kristalle in allen Juwelenfarben ragen aus dem Boden. Das Pokémon ist in kristallines Licht gehüllt (Tera-Form). Lichtstrahlen brechen sich in tausend Farben an den Kristallflächen. Anime-Stil, ultra-premium.
 
 **Textfelder (Unteres Drittel):**
-* Fähigkeit (Banner): 'Tera-Kristall' Text: 'Solange dieses Pokémon eine Tera-Energiekarte trägt, nimmt es 20 Schadenspunkte weniger.'
+* FÄHIGKEIT – authentisches TCG-Layout: Horizontale rechteckige Box über volle Kartenbreite. LINKS: ausgefülltes ROTES Rechteck-Badge (abgerundete Ecken) mit weißem Text 'Fähigkeit'. RECHTS DANEBEN gleiche Höhe: fett schwarzer Name 'Tera-Kristall'. DARUNTER: kleiner normaler Text 'Solange dieses Pokémon eine Tera-Energiekarte trägt, nimmt es 20 Schadenspunkte weniger.' KEINE Energie-Symbole.
 * Angriff: [Vier Energie-Symbole] 'Kristall-Brecher' (fett, schwarz), rechtsbündig '180'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
 
@@ -757,7 +757,7 @@ Eine extrem stilisierte, grafische Illustration. WICHTIG: Übernimm die exakten 
 Eine übertrieben coole und verspielte Illustration mit fetten Linien. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] geben sich ein High-Five oder machen eine witzige Pose. Der Hintergrund ist ein farbenfrohes Chaos aus Doodle-Kunst (Sterne, Blitze, Blumenmuster).
 
 **Textfelder (Unteres Drittel):**
-* Fähigkeit (Rotes Banner): 'Fähigkeit: Letzter Ausweg' Text: 'Einmal während deines Zuges kannst du dein Deck nach einer Unterstützerkarte durchsuchen.'
+* FÄHIGKEIT – authentisches TCG-Layout: Horizontale rechteckige Box über volle Kartenbreite. LINKS: ausgefülltes ROTES Rechteck-Badge (abgerundete Ecken) mit weißem Text 'Fähigkeit'. RECHTS DANEBEN gleiche Höhe: fett schwarzer Name 'Letzter Ausweg'. DARUNTER: kleiner normaler Text 'Einmal während deines Zuges kannst du dein Deck nach einer Unterstützerkarte durchsuchen.' KEINE Energie-Symbole.
 * Angriff: [Drei Energie-Symbole] 'Doodle-Schlag' (fett, schwarz), rechtsbündig '60'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
 

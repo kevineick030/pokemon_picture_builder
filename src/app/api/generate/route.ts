@@ -24,6 +24,8 @@ const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, üb
 
 4. KORREKTE DEUTSCHE KARTEN-BEGRIFFE in der unteren Werte-Zeile: 'Schwäche', 'Resistenz', 'Rückzug' (exakt so buchstabiert). 'BASIS' für Basis-Pokémon. Diese Begriffe immer korrekt und lesbar schreiben.
 
+5. FÄHIGKEIT-BOX LAYOUT (authentisches Pokémon TCG): Eine Fähigkeit wird als EIGENE horizontale Box dargestellt – NICHT als Angriff. Aufbau der Box: ganz links ein kurzes, vollständig ausgefülltes ROTES Rechteck-Badge mit abgerundeten Ecken und weißem Text 'Fähigkeit' (wie ein roter Aufkleber). Direkt rechts davon, auf GLEICHER HÖHE: der Fähigkeits-Name in FETT schwarz. In der Zeile DARUNTER: die Beschreibung in kleiner normaler Schrift (nicht fett), linksbündig. Die Fähigkeit hat KEINE Energie-Kosten-Kreise links – das ist der visuelle Unterschied zu Angriffen.
+
 ---
 
 `;
@@ -47,8 +49,7 @@ function buildTextfelderBlock(stats: CardStats): string {
   ];
   if (stats.abilityName) {
     lines.push(
-      `* Fähigkeit (farbiges Banner): 'Fähigkeit: ${stats.abilityName}'`
-        + (stats.abilityText ? ` mit Beschreibungstext: '${stats.abilityText}'` : "")
+      `* FÄHIGKEIT – authentisches TCG-Layout (MUSS exakt so gezeichnet werden): Horizontale rechteckige Box über volle Kartenbreite. LINKS: ein ausgefülltes ROTES Rechteck-Badge mit abgerundeten Ecken und weißem Text 'Fähigkeit' (wie ein roter Sticker/Label). RECHTS DANEBEN auf GLEICHER HÖHE: fett schwarzer Fähigkeits-Name '${stats.abilityName}'. In der NÄCHSTEN ZEILE DARUNTER: kleiner normaler (nicht fetter) Text '${stats.abilityText || ""}'. KEINE Energie-Symbol-Kreise vor der Fähigkeit.`
     );
   }
   if (stats.attack1Name) {
