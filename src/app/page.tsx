@@ -445,6 +445,7 @@ export default function Home() {
         referenceImageBase64,
         referenceImageMimeType,
         statsAppendix,
+        stats,
         ...(customPrompt != null ? { finalPromptOverride: customPrompt } : {}),
       }),
     });

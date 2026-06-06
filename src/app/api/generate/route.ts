@@ -18,16 +18,62 @@ const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, üb
 
 1. PERSONENSTIL: Jede Person auf dieser Karte MUSS vollständig im authentischen Pokémon TCG Anime-Illustrationsstil gezeichnet sein – als handgezeichneter Anime-Charakter mit Cel-Shading, sauberen schwarzen Outlines und stilisierten Zügen. ABSOLUT KEIN fotografischer Realismus. KEINE Foto-Montage. KEIN Photo-Compositing. Die Person ist eine GEZEICHNETE Anime-Figur, nicht ein eingearbeitetes Foto. Die Gesichtsmerkmale aus der Beschreibung werden übernommen, aber komplett im Anime/TCG-Zeichenstil neu interpretiert und gemalt.
 
-2. TEXTE: Alle Texte auf der Karte müssen korrekt buchstabiert und gut lesbar sein. Keine Phantomzeichen, keine verdrehten Buchstaben, kein Kauderwelsch. Angriffsnamen, HP-Werte und Kartentitel exakt so schreiben wie angegeben.
+2. TEXTE – SEHR WICHTIG: Schreibe ausschließlich die explizit vorgegebenen Texte (Kartentitel, Angriffsnamen, HP-Wert, Schadenswerte). Jeder Buchstabe muss korrekt und gut lesbar sein – KEINE erfundenen Wörter, KEINE verdrehten Buchstaben, KEIN Pseudo-Latein, KEIN Kauderwelsch. Erfinde KEINEN zusätzlichen Fließtext. Wenn kleiner Text (z.B. Illustrator-Zeile, Set-Nummer, Flavor-Text) nicht sauber und korrekt lesbar dargestellt werden kann, lasse ihn lieber ganz weg, statt unleserliche Fantasiebuchstaben zu malen.
+
+3. ICONS STATT KLAMMERTEXT: Ausdrücke in eckigen Klammern wie [Feuer-Symbol], [Gras-Symbol], [Zwei Energie-Symbole], [Wasser-Symbol] sind ANWEISUNGEN, an dieser Stelle ein passendes rundes Energie-ICON zu zeichnen. Schreibe diese Klammer-Ausdrücke NIEMALS als Buchstaben auf die Karte – zeichne stattdessen das Symbol.
+
+4. KORREKTE DEUTSCHE KARTEN-BEGRIFFE in der unteren Werte-Zeile: 'Schwäche', 'Resistenz', 'Rückzug' (exakt so buchstabiert). 'BASIS' für Basis-Pokémon. Diese Begriffe immer korrekt und lesbar schreiben.
 
 ---
 
 `;
 
+interface CardStats {
+  type?: string;
+  hp?: string;
+  abilityName?: string;
+  abilityText?: string;
+  attack1Name?: string;
+  attack1Damage?: string;
+  attack2Name?: string;
+  attack2Damage?: string;
+}
+
+// Builds a fresh "Textfelder" section from the user's stats. This replaces the
+// template's hardcoded attacks so the user's values actually appear on the card.
+function buildTextfelderBlock(stats: CardStats): string {
+  const lines: string[] = [
+    "**Textfelder (Unteres Drittel) – DIESE WERTE SIND VERBINDLICH. GENAU UND NUR DIESE Texte erscheinen auf der Karte:**",
+  ];
+  if (stats.abilityName) {
+    lines.push(
+      `* Fähigkeit (farbiges Banner): 'Fähigkeit: ${stats.abilityName}'`
+        + (stats.abilityText ? ` mit Beschreibungstext: '${stats.abilityText}'` : "")
+    );
+  }
+  if (stats.attack1Name) {
+    lines.push(
+      `* Angriff 1: [Energie-Symbol] '${stats.attack1Name}' (fett, schwarz)`
+        + (stats.attack1Damage ? `, Schaden rechtsbündig '${stats.attack1Damage}'` : "")
+        + "."
+    );
+  }
+  if (stats.attack2Name) {
+    lines.push(
+      `* Angriff 2: [zwei Energie-Symbole] '${stats.attack2Name}' (fett, schwarz)`
+        + (stats.attack2Damage ? `, Schaden rechtsbündig '${stats.attack2Damage}'` : "")
+        + "."
+    );
+  }
+  lines.push("* Untere Werte-Zeile: 'Schwäche' ×2, 'Resistenz' −30, 'Rückzug' (Kosten-Symbole).");
+  lines.push("WICHTIG: Es dürfen AUSSCHLIESSLICH die oben genannten Angriffe und Fähigkeiten auf der Karte stehen – keine weiteren, keine doppelten, keine erfundenen.");
+  return lines.join("\n");
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix, finalPromptOverride } = body;
+    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix, stats, finalPromptOverride } = body;
 
     let fotoDescription = personDescription || "";
     let finalPrompt: string;
@@ -72,30 +118,34 @@ export async function POST(req: NextRequest) {
         .replace(/\[POKEMON_NAME\]/g, pokemonName || "")
         .replace(/\[FOTO_BESCHREIBUNG_DER_PERSON\]/g, fotoDescription);
 
-      if (statsAppendix) {
-        // Replace HP value directly in template so it overrides hardcoded value
-        const hpMatch = statsAppendix.match(/HP: exakt '(\d+) HP'/);
-        if (hpMatch) {
-          templateText = templateText.replace(/'?\d{2,3} HP'?/g, `'${hpMatch[1]} HP'`);
-        }
-        // Extract user attack names to avoid duplicates with template hardcoded attacks
-        const attack1Match = statsAppendix.match(/Angriff 1: '([^']+)'/);
-        const attack2Match = statsAppendix.match(/Angriff 2: '([^']+)'/);
-        const hasCustomAttacks = attack1Match || attack2Match;
-
-        // Put user stats BEFORE the template so they take priority
-        let overrideBlock = statsAppendix.replace(
-          "WICHTIGE KARTEN-DETAILS (müssen exakt so auf der Karte erscheinen):",
-          "VERBINDLICHE KARTEN-WERTE – diese überschreiben alle anderen Werte weiter unten:"
-        );
-        if (hasCustomAttacks) {
-          const attackNames = [attack1Match?.[1], attack2Match?.[1]].filter(Boolean).join(" und ");
-          overrideBlock += `\n\nWICHTIG: Auf der Karte dürfen NUR die oben genannten Angriffe erscheinen (${attackNames}). Alle anderen Angriffsnamen aus dem Template darunter werden IGNORIERT und dürfen NICHT auf der Karte erscheinen. Kein Angriff darf doppelt vorkommen.`;
-        }
-        finalPrompt = GLOBAL_STYLE_PREFIX + overrideBlock + "\n\n---\n\n" + templateText;
-      } else {
-        finalPrompt = GLOBAL_STYLE_PREFIX + templateText;
+      // Override HP in the header with the user's value.
+      if (stats?.hp) {
+        templateText = templateText.replace(/\d{2,3}\s*HP/g, `${stats.hp} HP`);
       }
+
+      // If the user provided their own attacks/ability, REPLACE the template's
+      // hardcoded Textfelder section entirely. This is the key fix: previously the
+      // template's hardcoded attacks (e.g. 'Blütensturm') stayed in the prompt and
+      // the user's attacks were only appended as a note at the end, so the model
+      // rendered the template ones. Now the user values take the template's place.
+      const hasUserCardData = stats && (stats.attack1Name || stats.attack2Name || stats.abilityName);
+      if (hasUserCardData) {
+        const newBlock = buildTextfelderBlock(stats);
+        // Replace from the "**Textfelder...**" heading up to (but not including) "**Details:".
+        const replaced = templateText.replace(/\*\*Textfelder[^\n]*\*\*[\s\S]*?(?=\n\*\*Details:)/, newBlock);
+        // If the template had no Textfelder section (e.g. some layouts), append instead.
+        templateText = replaced !== templateText ? replaced : `${templateText}\n\n${newBlock}`;
+      }
+
+      // Build the final prompt. statsAppendix (type/palette hints) still goes on top
+      // as a non-conflicting style hint when present.
+      const typeHint = stats?.type && statsAppendix
+        ? statsAppendix.replace(
+            "WICHTIGE KARTEN-DETAILS (müssen exakt so auf der Karte erscheinen):",
+            "STIL-HINWEIS (Typ & Farbpalette):"
+          ) + "\n\n---\n\n"
+        : "";
+      finalPrompt = GLOBAL_STYLE_PREFIX + typeHint + templateText;
     }
 
     // Step 3: Generate the image.
