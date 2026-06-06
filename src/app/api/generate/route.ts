@@ -67,50 +67,66 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Step 3: Generate the image — try generateImages first, fall back to generateContent
+    // Step 3: Generate the image — try each model/method until one works
     let imageData: string | null = null;
     let imageMimeType = "image/jpeg";
 
-    // Attempt A: generateImages API (used by dedicated image models)
-    try {
-      const imgResult = await ai.models.generateImages({
-        model: IMAGE_MODEL,
-        prompt: finalPrompt,
-        config: { numberOfImages: 1, outputMimeType: "image/jpeg" } as any,
-      });
-      const raw = imgResult.generatedImages?.[0]?.image?.imageBytes;
-      if (raw) {
-        imageData = typeof raw === "string" ? raw : Buffer.from(raw as Uint8Array).toString("base64");
-        imageMimeType = "image/jpeg";
-      }
-    } catch (imgErr: any) {
-      console.log("generateImages failed, trying generateContent:", imgErr?.message);
+    const modelsToTry = [
+      IMAGE_MODEL,
+      ...(IMAGE_MODEL !== "gemini-3-pro-image" ? ["gemini-3-pro-image"] : []),
+      "gemini-2.5-flash-image",
+      "gemini-3.1-flash-image",
+    ];
 
-      // Attempt B: generateContent with image response modality
-      const result = await ai.models.generateContent({
-        model: IMAGE_MODEL,
-        contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
-        config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
-      });
+    const errors: string[] = [];
 
-      let textResponse = "";
-      for (const candidate of result.candidates ?? []) {
-        for (const part of candidate.content?.parts ?? []) {
-          if (part.inlineData?.data) {
-            imageData = part.inlineData.data;
-            imageMimeType = part.inlineData.mimeType ?? "image/jpeg";
-          } else if (part.text) {
-            textResponse += part.text;
+    for (const model of modelsToTry) {
+      if (imageData) break;
+
+      // Try generateContent (works for gemini image models)
+      try {
+        const result = await ai.models.generateContent({
+          model,
+          contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
+          config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
+        });
+        for (const candidate of result.candidates ?? []) {
+          for (const part of candidate.content?.parts ?? []) {
+            if (part.inlineData?.data) {
+              imageData = part.inlineData.data;
+              imageMimeType = part.inlineData.mimeType ?? "image/jpeg";
+            }
           }
         }
+        if (imageData) break;
+      } catch (e: any) {
+        errors.push(`${model}/generateContent: ${e?.message}`);
       }
 
-      if (!imageData) {
-        return NextResponse.json(
-          { error: "Kein Bild generiert. Möglicherweise hat der Content-Filter angesprochen. Versuche einen anderen Pokémon-Namen.", details: textResponse },
-          { status: 422 }
-        );
+      if (imageData) break;
+
+      // Try generateImages (works for imagen-style models)
+      try {
+        const imgResult = await ai.models.generateImages({
+          model,
+          prompt: finalPrompt,
+          config: { numberOfImages: 1, outputMimeType: "image/jpeg" } as any,
+        });
+        const raw = imgResult.generatedImages?.[0]?.image?.imageBytes;
+        if (raw) {
+          imageData = typeof raw === "string" ? raw : Buffer.from(raw as Uint8Array).toString("base64");
+          imageMimeType = "image/jpeg";
+        }
+      } catch (e: any) {
+        errors.push(`${model}/generateImages: ${e?.message}`);
       }
+    }
+
+    if (!imageData) {
+      return NextResponse.json(
+        { error: "Kein Bild generiert – alle Modelle fehlgeschlagen.", details: errors.join(" | ") },
+        { status: 422 }
+      );
     }
 
     if (!imageData) {
