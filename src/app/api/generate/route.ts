@@ -49,39 +49,54 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Step 3: Generate the image (text-only prompt — image models don't accept image input)
-    const contentParts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [
-      { text: finalPrompt },
-    ];
-
-    const result = await ai.models.generateContent({
-      model: IMAGE_MODEL,
-      contents: [{ role: "user", parts: contentParts }],
-      config: {
-        responseModalities: [Modality.IMAGE, Modality.TEXT],
-      },
-    });
-
+    // Step 3: Generate the image — try generateImages first, fall back to generateContent
     let imageData: string | null = null;
-    let imageMimeType = "image/png";
-    let textResponse = "";
+    let imageMimeType = "image/jpeg";
 
-    for (const candidate of result.candidates ?? []) {
-      for (const part of candidate.content?.parts ?? []) {
-        if (part.inlineData?.data) {
-          imageData = part.inlineData.data;
-          imageMimeType = part.inlineData.mimeType ?? "image/png";
-        } else if (part.text) {
-          textResponse += part.text;
+    // Attempt A: generateImages API (used by dedicated image models)
+    try {
+      const imgResult = await ai.models.generateImages({
+        model: IMAGE_MODEL,
+        prompt: finalPrompt,
+        config: { numberOfImages: 1, outputMimeType: "image/jpeg" } as any,
+      });
+      const raw = imgResult.generatedImages?.[0]?.image?.imageBytes;
+      if (raw) {
+        imageData = typeof raw === "string" ? raw : Buffer.from(raw as Uint8Array).toString("base64");
+        imageMimeType = "image/jpeg";
+      }
+    } catch (imgErr: any) {
+      console.log("generateImages failed, trying generateContent:", imgErr?.message);
+
+      // Attempt B: generateContent with image response modality
+      const result = await ai.models.generateContent({
+        model: IMAGE_MODEL,
+        contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
+        config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
+      });
+
+      let textResponse = "";
+      for (const candidate of result.candidates ?? []) {
+        for (const part of candidate.content?.parts ?? []) {
+          if (part.inlineData?.data) {
+            imageData = part.inlineData.data;
+            imageMimeType = part.inlineData.mimeType ?? "image/jpeg";
+          } else if (part.text) {
+            textResponse += part.text;
+          }
         }
+      }
+
+      if (!imageData) {
+        return NextResponse.json(
+          { error: "Kein Bild generiert. Möglicherweise hat der Content-Filter angesprochen. Versuche einen anderen Pokémon-Namen.", details: textResponse },
+          { status: 422 }
+        );
       }
     }
 
     if (!imageData) {
-      return NextResponse.json(
-        { error: "Kein Bild generiert. Möglicherweise hat der Content-Filter angesprochen. Versuche es ohne Referenzbild oder ändere den Pokémon-Namen.", details: textResponse },
-        { status: 422 }
-      );
+      return NextResponse.json({ error: "Kein Bild generiert." }, { status: 422 });
     }
 
     return NextResponse.json({
@@ -91,17 +106,17 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: any) {
     console.error("Gemini API Error:", err);
-    const raw = err?.message || "Unbekannter Fehler bei der Bildgenerierung";
-    // Surface a clear hint when the configured image model is unavailable for this key
-    if (/not found|NOT_FOUND|404/i.test(raw)) {
+    const raw = err?.message || "Unbekannter Fehler";
+    const status = err?.status ?? err?.httpError?.status ?? 500;
+    if (/not found|NOT_FOUND|404/i.test(raw) || status === 404) {
       return NextResponse.json(
         {
-          error: `Das Bild-Modell '${IMAGE_MODEL}' ist für diesen API-Key nicht verfügbar. Prüfe in Google AI Studio, ob das Modell freigeschaltet ist, oder setze die Umgebungsvariable GEMINI_IMAGE_MODEL auf ein verfügbares Modell.`,
+          error: `Das Bild-Modell '${IMAGE_MODEL}' ist für diesen API-Key nicht verfügbar.`,
           details: raw,
         },
         { status: 404 }
       );
     }
-    return NextResponse.json({ error: raw }, { status: 500 });
+    return NextResponse.json({ error: raw, details: String(err) }, { status: 500 });
   }
 }
