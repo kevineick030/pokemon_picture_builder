@@ -4,8 +4,8 @@ import { PROMPTS } from "@/data/prompts";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-// Nano Banana 2 (Gemini 3 Pro Image). Override via env without code changes.
-const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image";
+// Default: gemini-2.5-flash-image (widely available). Override via GEMINI_IMAGE_MODEL env var.
+const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";
 
 export async function POST(req: NextRequest) {
   try {
