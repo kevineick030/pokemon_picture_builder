@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { PROMPTS, CATEGORIES, type PromptTemplate } from "@/data/prompts";
 import { addDpiMetadataToPng } from "@/lib/zip-png";
+import { paintStatsBar } from "@/lib/stats-bar";
 import BatchPanel from "@/components/BatchPanel";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -466,18 +467,39 @@ export default function Home() {
     };
   };
 
-  const persistResult = (result: GenerateResult) => {
-    setResultImage(result.imageBase64);
-    setResultMimeType(result.mimeType);
+  const persistResult = async (result: GenerateResult) => {
+    let finalBase64 = result.imageBase64;
+    let finalMime = result.mimeType;
+
+    // Composite a clean stats bar if any stats are filled
+    if (stats.type || stats.hp || stats.attack1Name) {
+      const tc = TYPE_CONFIG[stats.type];
+      const weaknessType = stats.type ? `${tc?.emoji ?? ""}` : "—";
+      const retreatCount = stats.attack2Damage ? 2 : stats.attack1Damage ? 1 : 1;
+      try {
+        finalBase64 = await paintStatsBar({
+          imageBase64: result.imageBase64,
+          mimeType: result.mimeType,
+          weaknessLabel: `${weaknessType} ×2`,
+          resistanceLabel: `−30`,
+          retreatStars: retreatCount,
+          typeColor: tc?.glow.replace("0.55", "1") ?? "#6d28d9",
+        });
+        finalMime = "image/png";
+      } catch { /* leave original if canvas fails */ }
+    }
+
+    setResultImage(finalBase64);
+    setResultMimeType(finalMime);
     if (result.personDescription) setAutoDescription(result.personDescription);
     setHistory((prev) => [
-      { imageBase64: result.imageBase64, mimeType: result.mimeType,
+      { imageBase64: finalBase64, mimeType: finalMime,
         promptName: selectedPrompt?.name ?? "", holderName: holderName.trim(), pokemonName: pokemonName.trim() },
       ...prev.slice(0, 7),
     ]);
     setGallery((prev) => {
       const updated = [
-        { id: uid(), timestamp: Date.now(), imageBase64: result.imageBase64, mimeType: result.mimeType,
+        { id: uid(), timestamp: Date.now(), imageBase64: finalBase64, mimeType: finalMime,
           promptName: selectedPrompt?.name ?? "", holderName: holderName.trim(), pokemonName: pokemonName.trim() },
         ...prev,
       ].slice(0, MAX_GALLERY);
@@ -517,7 +539,7 @@ export default function Home() {
     setVariants(null);
     try {
       const result = await callGenerateApi();
-      persistResult(result);
+      await persistResult(result);
     } catch (err: any) {
       setError(err.message || "Netzwerkfehler");
     } finally {
@@ -540,6 +562,7 @@ export default function Home() {
       const [v1, v2] = await Promise.all([callGenerateApi(), callGenerateApi()]);
       setVariants([v1, v2]);
       setActiveTab("result");
+      // Note: variants are composited when user picks one via persistResult
     } catch (err: any) {
       setError(err.message || "Netzwerkfehler");
     } finally {
@@ -1132,7 +1155,7 @@ export default function Home() {
                               className="w-full h-full object-contain" />
                           </div>
                           <button
-                            onClick={() => { persistResult(v); setVariants(null); }}
+                            onClick={() => { persistResult(v).then(() => setVariants(null)); }}
                             className="w-full py-2 rounded-lg bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold transition-colors"
                           >
                             ✓ Variante {i + 1}
