@@ -26,6 +26,10 @@ const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, üb
 
 5. FÄHIGKEIT-BOX LAYOUT (authentisches Pokémon TCG): Eine Fähigkeit wird als EIGENE horizontale Box dargestellt – NICHT als Angriff. Aufbau der Box: ganz links ein kurzes, vollständig ausgefülltes ROTES Rechteck-Badge mit abgerundeten Ecken und weißem Text 'Fähigkeit' (wie ein roter Aufkleber). Direkt rechts davon, auf GLEICHER HÖHE: der Fähigkeits-Name in FETT schwarz. In der Zeile DARUNTER: die Beschreibung in kleiner normaler Schrift (nicht fett), linksbündig. Die Fähigkeit hat KEINE Energie-Kosten-Kreise links – das ist der visuelle Unterschied zu Angriffen.
 
+6. KARTEN-KOPF (Name & HP) – SEHR WICHTIG: Der Hintergrund hinter dem Kartennamen und dem HP-Wert oben auf der Karte ist HALBTRANSPARENT oder als weicher Farbverlauf ausgeführt – KEIN vollständig deckender farbiger Balken oder Streifen. Das Artwork scheint durch den Kopfbereich hindurch. Nur eine zarte, leicht getönte Fläche, die die Schrift lesbar macht (wie auf originalen Pokémon TCG Full-Art-Karten).
+
+7. STERNE (Set-Markierung unten): Maximal 3 Sterne. Die Sterne sind leicht gestaffelt angeordnet – NICHT alle exakt auf gleicher Höhe in einer geraden Reihe. Originale TCG-Karten zeigen 1–3 Sterne dezent und kleiner als der restliche Text in der unteren Info-Zeile.
+
 ---
 
 `;

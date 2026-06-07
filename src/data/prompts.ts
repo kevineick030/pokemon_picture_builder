@@ -51,7 +51,7 @@ export const PROMPTS: PromptTemplate[] = [
 * Angriff 2: [Zwei Gras-Symbole] 'Paradieshüter' (fett, schwarz), rechtsbündig '100'.
 * Werte unten: weakness fire-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
 
-**Details:** Unten links 'Illustr. FloralMRC', Set-Infos 'MRC-SIR 01 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. FloralMRC', Set-Infos 'MRC-SIR 01 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -421,7 +421,7 @@ Epische Action-Szene (Weitwinkel). WICHTIG: Übernimm die exakten Gesichtsmerkma
 * Angriff 2: [Zwei Energie-Symbole] 'Krasse Elementar-Zerstörung' (fett, schwarz), rechtsbündig '120'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat cost (2 Sterne).
 
-**Details:** Unten links 'Illustr. MyRookieCard Studio', Set-Infos 'MRC-ACT 01/05 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. MyRookieCard Studio', Set-Infos 'MRC-ACT 01/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -449,7 +449,7 @@ Monumentale Naturgewitter-Szene auf einem Gebirgskamm. WICHTIG: Übernimm die ex
 * Angriff 2: [Drei Energie-Symbole] 'Sturmbrecher-Stoß' (fett, schwarz), rechts '160'. Text: 'Lege alle Energiekarten von diesem Pokémon ab.'
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (3 Sterne).
 
-**Details:** Unten links 'Illustr. StormMRC', Set-Infos 'MRC-ACT 02/05 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. StormMRC', Set-Infos 'MRC-ACT 02/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -477,7 +477,7 @@ Atemberaubende Szene auf einem stürmischen Berg. WICHTIG: Übernimm die exakten
 * Angriff 2: [Drei Energie-Symbole] 'Zorn der Titanen' (fett, schwarz), rechtsbündig '140'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (3 Sterne).
 
-**Details:** Unten links 'Illustr. TitanForge MRC', Set-Infos 'MRC-ACT 03/05 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. TitanForge MRC', Set-Infos 'MRC-ACT 03/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -505,7 +505,7 @@ Action-Szene in der Luft. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus de
 * Angriff 2: [Zwei Energie-Symbole] 'Überschall-Sturm-Anschlag' (fett, schwarz), rechtsbündig '100'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
 
-**Details:** Unten links 'Illustr. VelocityMRC', Set-Infos 'MRC-ACT 04/05 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. VelocityMRC', Set-Infos 'MRC-ACT 04/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -533,7 +533,7 @@ Epische Unterwasser-Kampfszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale 
 * Angriff 2: [Drei Energie-Symbole] 'Abyssale Ozean-Explosion' (fett, schwarz), rechtsbündig '130'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
 
-**Details:** Unten links 'Illustr. AbyssalMRC', Set-Infos 'MRC-ACT 05/05 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. AbyssalMRC', Set-Infos 'MRC-ACT 05/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
 
@@ -619,7 +619,7 @@ Actiongeladene, leuchtende Anime-Illustration. WICHTIG: Übernimm die exakten Ge
 * Zentraler Regeltext: 'Unendliche Wiedergeburt: Heile allen Schaden von all deinen Pokémon im Spiel. Lege diese Karte nicht auf den Ablagestapel, sondern mische sie zurück in dein Deck.'
 * Restriction Box: 'Du kannst während deines Zuges nur 1 Unterstützerkarte spielen.'
 
-**Details:** Unten Links: 'Illustr. PhoenixStudio', 'RAINBOW-LEGEND 120/088 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten Links: 'Illustr. PhoenixStudio', 'RAINBOW-LEGEND 120/088 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -646,7 +646,7 @@ Edles, goldenes Porträt im Gold-Rare-Stil. WICHTIG: Übernimm die exakten Gesic
 * Zentraler Regeltext: 'Goldene Ära: Wenn diese Karte gespielt wird, kannst du alle deine Preiskarten ansehen und eine davon sofort nehmen.'
 * Restriction Box: 'Du kannst während deines Zuges nur 1 Unterstützerkarte spielen.'
 
-**Details:** Unten Links: 'Illustr. GoldMRC', Set-Infos 'GOLD-LEGEND 200/088 ★★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten Links: 'Illustr. GoldMRC', Set-Infos 'GOLD-LEGEND 200/088 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {
@@ -674,7 +674,7 @@ Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Ref
 * Angriff: [Vier Energie-Symbole] 'Kristall-Brecher' (fett, schwarz), rechtsbündig '180'.
 * Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
 
-**Details:** Unten links 'Illustr. TeraMRC', Set-Infos 'TERA-CRYSTAL 001/001 ★★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten links 'Illustr. TeraMRC', Set-Infos 'TERA-CRYSTAL 001/001 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
 
@@ -897,7 +897,7 @@ Hochexplosive Action-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkma
 * Zentraler Regeltext: 'Prismatischer Schutz: Verhindere alle Effekte von Angriffen die Pokémon deines Teams im nächsten Zug des Gegners.'
 * Restriction Box: 'Du kannst während deines Zuges nur 1 Unterstützerkarte spielen.'
 
-**Details:** Unten Links: 'Illustr. CrystalStudio', Set-Infos 'PRISM-STORM 77/077 ★★★★'. Copyright: '© My Rookie Card'.`,
+**Details:** Unten Links: 'Illustr. CrystalStudio', Set-Infos 'PRISM-STORM 77/077 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   {

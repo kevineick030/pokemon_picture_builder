@@ -140,7 +140,7 @@ const TYPE_CONFIG: Record<string, { emoji: string; glow: string; palette: string
 
 const GALLERY_KEY = "mrc_gallery";
 const MAX_GALLERY = 12;
-const PRINT_W = Math.round((63 / 25.4) * 300); // 744 px
+const PRINT_W = Math.round((64 / 25.4) * 300); // 756 px
 const PRINT_H = Math.round((88 / 25.4) * 300); // 1039 px
 
 // ── Utilities ──────────────────────────────────────────────────────────────
@@ -219,7 +219,7 @@ function openPrintWindow(imageBase64: string, mimeType: string) {
   win.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"/>
 <style>@page{size:105mm 148mm;margin:0}*{margin:0;padding:0;box-sizing:border-box}
 html,body{width:105mm;height:148mm;background:white;display:flex;align-items:center;justify-content:center}
-.card{width:63mm;height:88mm;overflow:hidden}.card img{width:63mm;height:88mm;display:block;object-fit:fill;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.card{width:64mm;height:88mm;overflow:hidden}.card img{width:64mm;height:88mm;display:block;object-fit:fill;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .hint{position:fixed;bottom:12px;left:0;right:0;text-align:center;font-family:sans-serif;font-size:11px;color:#666}
 @media print{.hint{display:none}}</style></head>
 <body><div class="card"><img src="data:${mimeType};base64,${imageBase64}"/></div>
@@ -238,14 +238,14 @@ function openMultiPrint(cards: PrintCard[], layout: "a4" | "a6") {
   const pageStyle = isA4 ? "@page{size:210mm 297mm;margin:0}" : "@page{size:148mm 105mm;margin:0}";
   const bodyStyle = isA4 ? "width:210mm;height:297mm" : "width:148mm;height:105mm";
   const gridStyle = isA4
-    ? "grid-template-columns:63mm 63mm;grid-template-rows:88mm 88mm;gap:5mm"
-    : "grid-template-columns:63mm 63mm;grid-template-rows:88mm;gap:5mm";
+    ? "grid-template-columns:64mm 64mm;grid-template-rows:88mm 88mm;gap:5mm"
+    : "grid-template-columns:64mm 64mm;grid-template-rows:88mm;gap:5mm";
   const hint = isA4 ? "A4 · 4 Karten · 100% · Randlos" : "A6 quer · 2 Karten · 100%";
   const win = window.open("", "_blank");
   if (!win) { alert("Popup blockiert."); return; }
   win.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"/>
 <style>${pageStyle}*{margin:0;padding:0;box-sizing:border-box}html,body{background:white;${bodyStyle};display:flex;align-items:center;justify-content:center}
-.grid{display:grid;${gridStyle}}.card{width:63mm;height:88mm;overflow:hidden;border:.3pt solid #ccc}
+.grid{display:grid;${gridStyle}}.card{width:64mm;height:88mm;overflow:hidden;border:.3pt solid #ccc}
 .card img{width:100%;height:100%;display:block;object-fit:fill;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .hint{position:fixed;bottom:8px;left:0;right:0;text-align:center;font-family:sans-serif;font-size:10px;color:#666}
 @media print{.hint{display:none}}</style></head>
@@ -589,7 +589,7 @@ export default function Home() {
   const handleExportPrint = async () => {
     if (!resultImage) return;
     setExporting(true);
-    await exportPrintPng(resultImage, resultMimeType, `${holderName || "karte"}_63x88mm_300dpi.png`);
+    await exportPrintPng(resultImage, resultMimeType, `${holderName || "karte"}_64x88mm_300dpi.png`);
     setExporting(false);
   };
 
