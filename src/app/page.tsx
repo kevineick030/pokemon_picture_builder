@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { PROMPTS, CATEGORIES, type PromptTemplate } from "@/data/prompts";
 import { addDpiMetadataToPng } from "@/lib/zip-png";
 import BatchPanel from "@/components/BatchPanel";
+import { uploadCardToSupabase, loadCardsFromSupabase, type SavedCard } from "@/lib/supabase";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,7 @@ interface GalleryCard {
   promptName: string;
   holderName: string;
   pokemonName: string;
+  supabaseUrl?: string; // Cloud-URL nach Upload
 }
 
 interface GenerateResult {
@@ -480,16 +482,38 @@ export default function Home() {
         promptName: selectedPrompt?.name ?? "", holderName: holderName.trim(), pokemonName: pokemonName.trim() },
       ...prev.slice(0, 7),
     ]);
+
+    const newEntry: GalleryCard = {
+      id: uid(), timestamp: Date.now(), imageBase64: finalBase64, mimeType: finalMime,
+      promptName: selectedPrompt?.name ?? "", holderName: holderName.trim(), pokemonName: pokemonName.trim(),
+    };
+
     setGallery((prev) => {
-      const updated = [
-        { id: uid(), timestamp: Date.now(), imageBase64: finalBase64, mimeType: finalMime,
-          promptName: selectedPrompt?.name ?? "", holderName: holderName.trim(), pokemonName: pokemonName.trim() },
-        ...prev,
-      ].slice(0, MAX_GALLERY);
+      const updated = [newEntry, ...prev].slice(0, MAX_GALLERY);
       saveGallery(updated);
       return updated;
     });
     setActiveTab("result");
+
+    // Upload zu Supabase im Hintergrund (non-blocking)
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      uploadCardToSupabase({
+        imageBase64: finalBase64,
+        mimeType: finalMime,
+        holderName: holderName.trim(),
+        pokemonName: pokemonName.trim(),
+        promptId: selectedPrompt?.id ?? 0,
+        promptName: selectedPrompt?.name ?? "",
+      }).then((url) => {
+        if (url) {
+          setGallery((prev) => {
+            const updated = prev.map((c) => c.id === newEntry.id ? { ...c, supabaseUrl: url } : c);
+            saveGallery(updated);
+            return updated;
+          });
+        }
+      });
+    }
   };
 
   // ── Handlers ──────────────────────────────────────────────────────────────
@@ -1334,10 +1358,14 @@ export default function Home() {
                         <img src={`data:${card.mimeType};base64,${card.imageBase64}`} alt={card.promptName}
                           className="w-full aspect-[5/7] object-cover" />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all" />
+                        {/* Cloud-Sync-Indikator */}
+                        <span className={`absolute top-1 right-1 text-[9px] rounded-full px-1 ${card.supabaseUrl ? "bg-green-500/80 text-white" : "bg-slate-700/80 text-slate-400"}`}>
+                          {card.supabaseUrl ? "☁" : "⏳"}
+                        </span>
                       </button>
                     ))}
                   </div>
-                  <p className="text-[10px] text-slate-600">Browser-Speicher · max. {MAX_GALLERY} Karten</p>
+                  <p className="text-[10px] text-slate-600">☁ = in Supabase gespeichert · max. {MAX_GALLERY} lokal</p>
                 </div>
               )}
             </div>
