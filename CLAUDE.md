@@ -40,13 +40,36 @@ Foto hochladen
 
 ---
 
-## Supabase / Bildspeicherung
+## Supabase / Bildspeicherung (IMPLEMENTIERT)
 
-Noch nicht implementiert. Plan:
-- JPEG 85% für Supabase-Storage (Cloud-Backup, geräteübergreifend)
-- JPEG 90% für "Druck"-Download
-- JPEG 80% für "Web/Teilen"-Download
-- PNG wird von Gemini geliefert, Browser-Canvas konvertiert zu JPEG
+**Eigenes Projekt** "Pokemon Picture Builder" (`csmxozlcpuuzqlprgdps`, eu-west-1) –
+GETRENNT vom Fußball-Business-Projekt "My rookie card v2". Nicht vermischen!
+- Bucket `mrc-cards` (public), Tabelle `mrc_generated_cards`.
+- **Upload läuft SERVER-SEITIG** in `route.ts` via `SUPABASE_SERVICE_ROLE_KEY`
+  (NICHT `NEXT_PUBLIC_`). Grund: neue Supabase-Projekte blocken direkten
+  Browser-Zugriff per Anon-Key ("Host not in allowlist" / 403). Der service_role
+  Key umgeht das und bleibt server-seitig.
+- `route.ts` gibt `supabaseUrl` in der JSON-Antwort zurück → Galerie zeigt ☁.
+- Vercel Env-Vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  (für evtl. Lesen), `SUPABASE_SERVICE_ROLE_KEY` (für Upload).
+
+---
+
+## Karten-Mechaniken (WICHTIG)
+
+- **KP statt HP:** Deutsche Karten nutzen "KP" (Kraftpunkte), nicht "HP".
+  `route.ts` konvertiert automatisch jedes "XXX HP" → "XXX KP".
+- **Mit/ohne Pokémon pro Design:** UI-Toggle `withPokemon`. JEDES Design kann
+  mit Begleit-Pokémon ODER Person solo (im Pokémon-Stil mit KP/Angriffen)
+  generiert werden. `applyPokemonMode()` in `route.ts`:
+  - Marker `[[POKE:…]]` = nur MIT Pokémon, `[[SOLO:…]]` = nur ohne.
+  - Templates ohne Marker: Fallback-Regex strippt "& [POKEMON_NAME]" etc.
+  - Solo-Modus hängt starke "Person allein"-Anweisung an.
+- **Premium-Designs (id 43–46):** Kategorie "Premium Alt-Art ⭐", basierend auf
+  Recherche zu echten SIR/IR/Tera-Karten (full-bleed, cinematisch, Stimmung).
+- **GLOBAL_STYLE_PREFIX Regeln** in `route.ts`: 1 Anime-Stil, 2 Texte, 3 Icons,
+  4 dt. Begriffe, 5 Fähigkeit-Box, 6 transparenter Kopf, 7 max 3 Sterne,
+  8 KP statt HP, 9 cinematische Full-Art-Komposition, 10 Silber-Rahmen.
 
 ---
 

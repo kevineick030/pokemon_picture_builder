@@ -61,7 +61,7 @@ const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, üb
 
 1. PERSONENSTIL: Jede Person auf dieser Karte MUSS vollständig im authentischen Pokémon TCG Anime-Illustrationsstil gezeichnet sein – als handgezeichneter Anime-Charakter mit Cel-Shading, sauberen schwarzen Outlines und stilisierten Zügen. ABSOLUT KEIN fotografischer Realismus. KEINE Foto-Montage. KEIN Photo-Compositing. Die Person ist eine GEZEICHNETE Anime-Figur, nicht ein eingearbeitetes Foto. Die Gesichtsmerkmale aus der Beschreibung werden übernommen, aber komplett im Anime/TCG-Zeichenstil neu interpretiert und gemalt.
 
-2. TEXTE – SEHR WICHTIG: Schreibe ausschließlich die explizit vorgegebenen Texte (Kartentitel, Angriffsnamen, HP-Wert, Schadenswerte). Jeder Buchstabe muss korrekt und gut lesbar sein – KEINE erfundenen Wörter, KEINE verdrehten Buchstaben, KEIN Pseudo-Latein, KEIN Kauderwelsch. Erfinde KEINEN zusätzlichen Fließtext. Wenn kleiner Text (z.B. Illustrator-Zeile, Set-Nummer, Flavor-Text) nicht sauber und korrekt lesbar dargestellt werden kann, lasse ihn lieber ganz weg, statt unleserliche Fantasiebuchstaben zu malen.
+2. TEXTE – SEHR WICHTIG: Schreibe ausschließlich die explizit vorgegebenen Texte (Kartentitel, Angriffsnamen, KP-Wert, Schadenswerte). Jeder Buchstabe muss korrekt und gut lesbar sein – KEINE erfundenen Wörter, KEINE verdrehten Buchstaben, KEIN Pseudo-Latein, KEIN Kauderwelsch. Erfinde KEINEN zusätzlichen Fließtext. Wenn kleiner Text (z.B. Illustrator-Zeile, Set-Nummer, Flavor-Text) nicht sauber und korrekt lesbar dargestellt werden kann, lasse ihn lieber ganz weg, statt unleserliche Fantasiebuchstaben zu malen.
 
 3. ICONS STATT KLAMMERTEXT: Ausdrücke in eckigen Klammern wie [Feuer-Symbol], [Gras-Symbol], [Zwei Energie-Symbole], [Wasser-Symbol] sind ANWEISUNGEN, an dieser Stelle ein passendes rundes Energie-ICON zu zeichnen. Schreibe diese Klammer-Ausdrücke NIEMALS als Buchstaben auf die Karte – zeichne stattdessen das Symbol.
 
@@ -69,9 +69,15 @@ const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, üb
 
 5. FÄHIGKEIT-BOX LAYOUT (authentisches Pokémon TCG): Eine Fähigkeit wird als EIGENE horizontale Box dargestellt – NICHT als Angriff. Aufbau der Box: ganz links ein kurzes, vollständig ausgefülltes ROTES Rechteck-Badge mit abgerundeten Ecken und weißem Text 'Fähigkeit' (wie ein roter Aufkleber). Direkt rechts davon, auf GLEICHER HÖHE: der Fähigkeits-Name in FETT schwarz. In der Zeile DARUNTER: die Beschreibung in kleiner normaler Schrift (nicht fett), linksbündig. Die Fähigkeit hat KEINE Energie-Kosten-Kreise links – das ist der visuelle Unterschied zu Angriffen.
 
-6. KARTEN-KOPF (Name & HP) – SEHR WICHTIG: Der Hintergrund hinter dem Kartennamen und dem HP-Wert oben auf der Karte ist HALBTRANSPARENT oder als weicher Farbverlauf ausgeführt – KEIN vollständig deckender farbiger Balken oder Streifen. Das Artwork scheint durch den Kopfbereich hindurch. Nur eine zarte, leicht getönte Fläche, die die Schrift lesbar macht (wie auf originalen Pokémon TCG Full-Art-Karten).
+6. KARTEN-KOPF (Name & KP) – SEHR WICHTIG: Der Hintergrund hinter dem Kartennamen und dem KP-Wert oben auf der Karte ist HALBTRANSPARENT oder als weicher Farbverlauf ausgeführt – KEIN vollständig deckender farbiger Balken oder Streifen. Das Artwork scheint durch den Kopfbereich hindurch. Nur eine zarte, leicht getönte Fläche, die die Schrift lesbar macht (wie auf originalen Pokémon TCG Full-Art-Karten).
 
 7. STERNE (Set-Markierung unten): Maximal 3 Sterne. Die Sterne sind leicht gestaffelt angeordnet – NICHT alle exakt auf gleicher Höhe in einer geraden Reihe. Originale TCG-Karten zeigen 1–3 Sterne dezent und kleiner als der restliche Text in der unteren Info-Zeile.
+
+8. KP STATT HP – SEHR WICHTIG: Deutsche Pokémon-Karten verwenden 'KP' (Kraftpunkte), NIEMALS 'HP'. Schreibe oben rechts den Wert immer als z.B. '120 KP' oder 'KP 120'. Niemals 'HP' auf die Karte schreiben.
+
+9. CINEMATISCHE FULL-ART-KOMPOSITION: Die begehrtesten echten Karten (Special Illustration Rare) sind randlose, kinoreife Illustrationen mit STIMMUNG und ERZÄHLUNG – die Figur LEBT in einer atmosphärischen Szene, keine neutrale Porträt-Pose. Nutze meisterhaftes Licht (goldene Stunde, Mondlicht, Gegenlicht/Rim-Light, Lens-Flare-Funkeln), Tiefe (Vorder-, Mittel-, Hintergrund), schwebende Lichtpartikel und typfarbene Funken um die Figur. Weiche, malerische Aquarell-artige Schattierung wird hoch geschätzt. Die Illustration läuft randlos bis an alle vier Kanten (full-bleed).
+
+10. KARTENRAHMEN: Moderner Pokémon-Kartenrahmen ist SILBERN/metallisch mit abgerundeten Ecken (nicht der alte gelbe Rahmen), außer ein Design schreibt ausdrücklich Gold (Gold Rare) vor.
 
 ---
 
@@ -118,10 +124,53 @@ function buildTextfelderBlock(stats: CardStats): string {
   return lines.join("\n");
 }
 
+// Applies the with/without-Pokémon mode to a template.
+// Templates may use optional conditional markers:
+//   [[POKE: ...]]  → kept only WHEN a companion Pokémon is included
+//   [[SOLO: ...]]  → kept only WHEN the person is alone (no companion)
+// Templates without markers are handled by a robust fallback that strips
+// common Pokémon references from titles/scene text when solo.
+function applyPokemonMode(text: string, withPokemon: boolean): string {
+  // 1. Resolve explicit conditional blocks.
+  if (withPokemon) {
+    text = text.replace(/\[\[POKE:([\s\S]*?)\]\]/g, "$1");
+    text = text.replace(/\[\[SOLO:[\s\S]*?\]\]/g, "");
+  } else {
+    text = text.replace(/\[\[SOLO:([\s\S]*?)\]\]/g, "$1");
+    text = text.replace(/\[\[POKE:[\s\S]*?\]\]/g, "");
+  }
+
+  if (!withPokemon) {
+    // 2. Fallback strip for templates that still reference the Pokémon directly.
+    text = text
+      // Normalise prefixed creature forms to the bare token first.
+      .replace(/Mega\s*\[POKEMON_NAME\]/gi, "[POKEMON_NAME]")
+      .replace(/Chibi-\[POKEMON_NAME\]/g, "[POKEMON_NAME]")
+      // "[HOLDER] & [POKEMON_NAME]" / "[POKEMON_NAME] & [HOLDER]"
+      .replace(/\s*&\s*\[POKEMON_NAME\]/g, "")
+      .replace(/\[POKEMON_NAME\]\s*&\s*/g, "")
+      // possessive / companion phrases
+      .replace(/\s*und\s+(ihr|ihrem|ihren|sein|seinem)\s+\[POKEMON_NAME\]/gi, "")
+      .replace(/\s*(ihr|ihrem|ihren|sein|seinem)\s+Partner-\[POKEMON_NAME\]/gi, "")
+      .replace(/\s*(ihr|ihrem|ihren|sein|seinem)\s+\[POKEMON_NAME\]/gi, "")
+      .replace(/\[HOLDER_NAME\]s\s+\[POKEMON_NAME\]/g, "[HOLDER_NAME]")
+      // any remaining bare token
+      .replace(/\[POKEMON_NAME\]/g, "")
+      // tidy leftover double spaces / dangling separators
+      .replace(/ {2,}/g, " ")
+      .replace(/\(\s*\)/g, "");
+    // 3. Strong instruction so the model draws the person alone.
+    text +=
+      "\n\nWICHTIG (SOLO-MODUS): Auf dieser Karte ist NUR die Person zu sehen – ALLEIN, OHNE Begleit-Pokémon, ohne Tier, ohne Kreatur, ohne Maskottchen neben ihr. Die Person ist allein der Star des Artworks.";
+  }
+
+  return text;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix, stats, finalPromptOverride } = body;
+    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix, stats, finalPromptOverride, withPokemon = true } = body;
 
     let fotoDescription = personDescription || "";
     let finalPrompt: string;
@@ -160,15 +209,19 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Step 2: Replace placeholders in the template
-      let templateText = template.template
+      // Step 2: Apply with/without-Pokémon mode first (resolves markers + strips
+      // companion references when solo), then replace the remaining placeholders.
+      let templateText = applyPokemonMode(template.template, withPokemon)
         .replace(/\[HOLDER_NAME\]/g, holderName || "")
         .replace(/\[POKEMON_NAME\]/g, pokemonName || "")
         .replace(/\[FOTO_BESCHREIBUNG_DER_PERSON\]/g, fotoDescription);
 
-      // Override HP in the header with the user's value.
+      // Normalise any "HP" the template/model might still use to the German "KP",
+      // and override the value with the user's KP when provided.
       if (stats?.hp) {
-        templateText = templateText.replace(/\d{2,3}\s*HP/g, `${stats.hp} HP`);
+        templateText = templateText.replace(/\d{2,3}\s*(KP|HP)/g, `${stats.hp} KP`);
+      } else {
+        templateText = templateText.replace(/(\d{2,3})\s*HP/g, "$1 KP");
       }
 
       // If the user provided their own attacks/ability, REPLACE the template's

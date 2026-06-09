@@ -10,6 +10,7 @@ export interface PromptTemplate {
 }
 
 export const CATEGORIES = [
+  "Premium Alt-Art ⭐ (Top-Designs)",
   "Floral & Natur – Holo-Highlights",
   "Feuer, Sturm & Elementarkräfte",
   "Klassische Full-Art Trainerkarten",
@@ -20,6 +21,125 @@ export const CATEGORIES = [
 ];
 
 export const PROMPTS: PromptTemplate[] = [
+
+  // ════════════════════════════════════════════════════════════════════════
+  // KATEGORIE: PREMIUM ALT-ART ⭐ (TOP-DESIGNS)
+  // Inspiriert von den begehrtesten echten Karten (SIR/IR/Tera). Full-bleed,
+  // cinematisch, mit Stimmung & Erzählung. Markierungen [[POKE:…]]/[[SOLO:…]]
+  // steuern automatisch die "mit/ohne Pokémon"-Variante.
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    id: 43,
+    name: "Mondlicht-Dächer (Premium SIR)",
+    subtitle: "Nacht-Alt-Art im Moonbreon-Stil – Vollmond über schlafender Stadt",
+    category: "Premium Alt-Art ⭐ (Top-Designs)",
+    hasPokemon: true,
+    icon: "🌙",
+    color: "from-indigo-500 to-violet-700",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Randlose, kinoreife Full-Art-Illustration bis an alle vier Kanten (full-bleed).
+
+**Kunststil:** Authentischer Pokémon TCG Special Illustration Rare (SIR) Stil – inspiriert von den begehrtesten Alt-Art-Karten. Erzählerische, ruhige Nachtszene mit melancholisch-schöner Stimmung. Tiefes Indigoblau und Nachtviolett, akzentuiert von warmem Fensterlicht und kühlem Mondlicht. Weiche, malerische, fast linienlose Schattierung. Silberner metallischer Kartenrahmen. Auf Holo-Vinyl schimmern Mond und Stadtlichter wie echtes Leuchten.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines silbernes Banner 'BASIS'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]]' (groß, fett, weiß mit zartem Glow).
+* Oben Rechts: '180 KP' (groß), gefolgt von einem typgerechten Energie-Symbol.
+
+**Haupt-Artwork:**
+Ruhige, atmosphärische Dachszene bei Nacht. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person sitzt entspannt auf einem Hausdach[[POKE: neben ihrem [POKEMON_NAME]]] und blickt über eine schlafende, nächtliche Stadt voller kleiner leuchtender Fenster. Hinter ihr steht ein gigantischer, runder Vollmond am sternklaren Himmel. Schwebende Lichtpartikel und sanfte typfarbene Funken tanzen in der Luft, kühles Rim-Light vom Mond zeichnet die Silhouette nach. Tiefe durch Vordergrund (Dachziegel), Mittelgrund (Figur) und Hintergrund (Stadt + Mond). Stimmung: friedvoll, magisch, zeitlos.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Energie-Symbol] 'Mondschein-Schritt' (fett, schwarz), rechtsbündig '70'.
+* Angriff 2: [Zwei Energie-Symbole] 'Nachthimmel-Sturz' (fett, schwarz), rechtsbündig '150'.
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+
+**Details:** Unten links 'Illus. MoonlightMRC', Set-Infos 'MRC-SIR 06 ★★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 44,
+    name: "Drachen-Inferno (Premium SIR)",
+    subtitle: "Dynamische Feuer-Alt-Art im Charizard-Stil – Bewegung & Glut",
+    category: "Premium Alt-Art ⭐ (Top-Designs)",
+    hasPokemon: true,
+    icon: "🔥",
+    color: "from-orange-500 to-red-700",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Randlose, kinoreife Full-Art-Illustration bis an alle vier Kanten (full-bleed).
+
+**Kunststil:** Authentischer Pokémon TCG Special Illustration Rare Stil – dynamische, dramatische Drachen-Alt-Art voller Bewegung und Energie. Intensives Feuerorange, Glut-Rot und tiefes Schwarz, durchbrochen von gleißendem Feuerschein. Weiche malerische Schattierung mit hartem Licht-Schatten-Kontrast, fliegende Funken und Hitzeflirren. Silberner metallischer Rahmen. Auf Holo-Vinyl scheint das Feuer regelrecht zu glühen.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines silbernes Banner 'BASIS'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]]' (groß, fett, schwarz mit Feuer-Glow).
+* Oben Rechts: '190 KP' (groß, rot), gefolgt von einem Feuer-Symbol.
+
+**Haupt-Artwork:**
+Hochdynamische, kinoreife Feuerszene in Bewegung. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht heldenhaft im Vordergrund[[POKE:, während sich ihr mächtiges [POKEMON_NAME] in voller Bewegung hinter/über ihr auftürmt]][[SOLO:, von einer gewaltigen, wirbelnden Feuer-Aura umhüllt]]. Flammen und glühende Funken wirbeln dynamisch durch die Luft, dramatisches Gegenlicht durchbricht den Rauch. Diagonale, energiegeladene Komposition mit starker Tiefe. Stimmung: episch, kraftvoll, mitreißend.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Feuer-Symbol] 'Glutschwinge' (fett, schwarz), rechtsbündig '60'.
+* Angriff 2: [Drei Feuer-Symbole] 'Infernosturz' (fett, schwarz), rechtsbündig '180'.
+* Werte unten: weakness water-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+
+**Details:** Unten links 'Illus. InfernoMRC', Set-Infos 'MRC-SIR 07 ★★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 45,
+    name: "Seeufer-Sonnenuntergang (Premium IR)",
+    subtitle: "Malerische Aquarell-Alt-Art – goldene Stunde am stillen See",
+    category: "Premium Alt-Art ⭐ (Top-Designs)",
+    hasPokemon: true,
+    icon: "🌅",
+    color: "from-amber-300 to-rose-400",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Randlose, malerische Full-Art-Illustration bis an alle vier Kanten (full-bleed).
+
+**Kunststil:** Authentischer Pokémon TCG Illustration Rare (IR) Stil – weiche, malerische Aquarell-Illustration mit fast linienlosen, fließenden Übergängen. Warme Sonnenuntergangs-Palette: Gold, Pfirsich, Rosé und sanftes Violett, gespiegelt im stillen Wasser. Environmental Storytelling – die Figur lebt friedlich in der Szene, keine Pose. Silberner metallischer Rahmen. Auf Holo-Vinyl wirken die weichen Farbverläufe wie Seide.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines silbernes Banner 'BASIS'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]]' (groß, fett, tintenschwarz).
+* Oben Rechts: '120 KP' (groß), gefolgt von einem typgerechten Energie-Symbol.
+
+**Haupt-Artwork:**
+Friedliche, malerische Szene in der goldenen Stunde. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person sitzt am Ufer eines spiegelglatten Sees[[POKE: zusammen mit ihrem [POKEMON_NAME]]] und schaut auf den Sonnenuntergang. Die untergehende Sonne taucht alles in warmes Goldlicht, das sich im Wasser spiegelt. Schilf und einzelne Blätter im Vordergrund, sanfte Hügel und Wolken im Hintergrund, schwebende Lichtfunken über dem Wasser. Tiefe und Ruhe. Stimmung: warm, nostalgisch, wunderschön.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Wasser-Symbol] 'Stille Welle' (fett, schwarz), rechtsbündig '50'. Text: 'Heile 20 Schadenspunkte von diesem Pokémon.'
+* Angriff 2: [Zwei Energie-Symbole] 'Abendglanz' (fett, schwarz), rechtsbündig '110'.
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+
+**Details:** Unten links 'Illus. SunsetMRC', Set-Infos 'MRC-IR 08 ★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 46,
+    name: "Tera-Prisma ex (Premium Kristall)",
+    subtitle: "Tera-Buntglas-Effekt mit geätzter Silberfolie – Ultra Premium",
+    category: "Premium Alt-Art ⭐ (Top-Designs)",
+    hasPokemon: true,
+    icon: "💠",
+    color: "from-cyan-300 to-fuchsia-500",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Randlose Full-Art-Illustration bis an alle vier Kanten (full-bleed).
+
+**Kunststil:** Authentischer Pokémon TCG Tera-ex Stil. Das Motiv wirkt wie in eine gläserne, kristalline Buntglas-Hülle gehüllt – facettierte, prismatische Oberflächen. Hintergrund: silbrige, geätzte, strukturierte Folie in zarten Pastelltönen mit typfarbenen Sternen und feinem Funkeln hinter der Figur. Juwelenartige Lichtbrechung in tausend Farben. Silberner metallischer Rahmen. Auf Holo-Vinyl der ultimative Flex – die Kristallflächen schimmern aus jedem Blickwinkel anders.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines kristallines Banner 'TERA'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]] ex' (groß, fett, kristallweiß mit Regenbogen-Schimmer, das 'ex' in glänzendem rot-silbernem Logo-Stil).
+* Oben Rechts: '230 KP' (groß, kristallblau), gefolgt von einem Tera-Symbol.
+
+**Haupt-Artwork:**
+Prismatische Tera-Kristall-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht im Zentrum einer Formation aus gigantischen, leuchtenden Kristallen[[POKE: neben ihrem [POKEMON_NAME], das in kristallines Tera-Licht gehüllt ist]]. Lichtstrahlen brechen sich an den Kristallflächen und werfen Regenbogen-Reflexe. Typfarbene Funken und Sterne schweben im Hintergrund. Tiefe durch gestaffelte Kristalle. Stimmung: edel, magisch, ultra-premium.
+
+**Textfelder (Unteres Drittel):**
+* Fähigkeit (rotes 'Fähigkeit'-Badge links, Name fett daneben): 'Prisma-Schild' Beschreibung darunter: 'Solange dieses Pokémon eine Tera-Energie trägt, nimmt es 30 Schadenspunkte weniger.'
+* Angriff: [Drei Energie-Symbole] 'Kristall-Brecher' (fett, schwarz), rechtsbündig '200'.
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+
+**Details:** Unten links 'Illus. TeraMRC', Set-Infos 'MRC-TERA 09 ★★'. Copyright: '© My Rookie Card'.`,
+  },
 
   // ════════════════════════════════════════════════════════════════════════
   // KATEGORIE: FLORAL & NATUR – HOLO-HIGHLIGHTS
@@ -41,7 +161,7 @@ export const PROMPTS: PromptTemplate[] = [
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlos).
-* Oben Rechts: '120 HP' (groß, rot), gefolgt von einem Gras/Natur-Symbol.
+* Oben Rechts: '120 KP' (groß, rot), gefolgt von einem Gras/Natur-Symbol.
 
 **Haupt-Artwork:**
 Üppige tropische Blütenparadies-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] sind vollständig in die blühende Natur integriert – gigantische tropische Blüten und Blätter rahmen die Szene, Blütenblätter fliegen durch die Luft, ein warmes goldenes Licht bricht durch das Blätterdach. Die Person ist als detaillierter Anime-Charakter gezeichnet, im TCG-Full-Art-Stil. Tautropfen auf Blättern fangen das Licht – ideal für Holo-Folie.
@@ -150,7 +270,7 @@ Mystische Szene in einem uralten, leuchtenden Urwald. WICHTIG: Übernimm die exa
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, weiß mit silbernem Outline).
-* Oben Rechts: '130 HP' (groß, blau), gefolgt von Eis/Wasser-Symbol.
+* Oben Rechts: '130 KP' (groß, blau), gefolgt von Eis/Wasser-Symbol.
 
 **Haupt-Artwork:**
 Verzauberter Winterwaldszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] stehen auf einem zugefrorenen Bergsee. Ringsherum ein Wald aus vereisten Bäumen – jeder Ast mit Eiskristallen überzogen, die in allen Richtungen reflektieren. Am Himmel die grün-violetten Nordlichter (Aurora Borealis). Eiskristalle fliegen durch die Luft. Ruhige, majestätische Stimmung mit dramatischer Beleuchtung.
@@ -183,7 +303,7 @@ Verzauberter Winterwaldszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale au
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlos).
-* Oben Rechts: '150 HP' (groß, rot), gefolgt von Feuer-Symbol.
+* Oben Rechts: '150 KP' (groß, rot), gefolgt von Feuer-Symbol.
 
 **Haupt-Artwork:**
 Epische Vulkan-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht an einem Lavasee, hinter ihr bricht ein Vulkan in dramatischer Eruption aus. Ihr [POKEMON_NAME] ist groß im Vordergrund, umhüllt von Flammen und Hitzeflirren. Glühende Lavabrocken fliegen durch die Luft, Aschepartikel tanzen. Das Licht der Lava taucht alles in intensives Orange. Anime Full-Art Stil, dramatisch und imposant.
@@ -211,7 +331,7 @@ Epische Vulkan-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Re
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
-* Oben Rechts: '140 HP' (groß, gelb), gefolgt von Blitz-Symbol.
+* Oben Rechts: '140 KP' (groß, gelb), gefolgt von Blitz-Symbol.
 
 **Haupt-Artwork:**
 Dramatische Gewitterszene auf einer Bergkuppe. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] stehen auf dem Gipfel eines Berges, ein gewaltiges Naturgewitter tobt um sie. Blitze schlagen in die Umgebung ein und erleuchten die Szene grell. Der Wind peitscht, die Stimmung ist episch. Im Hintergrund dramatische Sturmwolken über einer zerklüfteten Berglandschaft. Rein natürliche Elementargewalt – keine Technik, nur Natur in ihrer mächtigsten Form.
@@ -411,7 +531,7 @@ Fröhliche, detaillierte Anime-Illustration. WICHTIG: Übernimm die exakten Gesi
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlose Schrift).
-* Oben Rechts: '150 HP' (rot), gefolgt von einem Element-Symbol.
+* Oben Rechts: '150 KP' (rot), gefolgt von einem Element-Symbol.
 
 **Haupt-Artwork:**
 Epische Action-Szene (Weitwinkel). WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr Partner-[POKEMON_NAME] vollführen einen mächtigen, synchronisierten Angriff. Der Fels-Boden splittert unter der Kraft des Angriffs, Energie-Blitze und Trümmer fliegen. Dynamische Komposition im Anime-Stil.
@@ -439,7 +559,7 @@ Epische Action-Szene (Weitwinkel). WICHTIG: Übernimm die exakten Gesichtsmerkma
 **Header-Bereich:**
 * Oben Links: Kleines goldenes Banner mit dem Text 'TAG TEAM'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
-* Oben Rechts: '180 HP' (rot), gefolgt von einem Blitz/Sturm-Symbol.
+* Oben Rechts: '180 KP' (rot), gefolgt von einem Blitz/Sturm-Symbol.
 
 **Haupt-Artwork:**
 Monumentale Naturgewitter-Szene auf einem Gebirgskamm. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Person und [POKEMON_NAME] stehen entschlossen auf einer Bergkuppe, während ein gewaltiges Naturgewitter um sie tobt. Mächtige Naturblitze erhellen dramatisch den Himmel hinter ihnen. Peitschender Wind, Regen. Das Pokémon lädt Energie auf, die Person hebt den Arm. Rein natürliche Elementargewalt.
@@ -467,7 +587,7 @@ Monumentale Naturgewitter-Szene auf einem Gebirgskamm. WICHTIG: Übernimm die ex
 **Header-Bereich:**
 * Oben Links: Kleines goldenes Banner mit dem Text 'PHASE 1'.
 * Titel: '[HOLDER_NAME]s [POKEMON_NAME]' (groß, fett, schwarz).
-* Oben Rechts: '160 HP' (rot), gefolgt von Energie-Symbol.
+* Oben Rechts: '160 KP' (rot), gefolgt von Energie-Symbol.
 
 **Haupt-Artwork:**
 Atemberaubende Szene auf einem stürmischen Berg. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Person steht furchtlos im Vordergrund, hinter ihr wächst das [POKEMON_NAME] zu titanenhafter Größe heran. Wirbelstürme, Magma, ein mächtiger Lichtstrahl bricht durch die Wolken. Anime Full-Art mit extremen Kontrasten.
@@ -495,7 +615,7 @@ Atemberaubende Szene auf einem stürmischen Berg. WICHTIG: Übernimm die exakten
 **Header-Bereich:**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
-* Oben Rechts: '130 HP' (rot), gefolgt von Wind/Elektro-Symbol.
+* Oben Rechts: '130 KP' (rot), gefolgt von Wind/Elektro-Symbol.
 
 **Haupt-Artwork:**
 Action-Szene in der Luft. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Person reitet auf dem Rücken ihres [POKEMON_NAME] im Sturzflug durch Wolken über Wolkenkratzern. Speedlines strahlen von der Mitte aus. Peitschender Wind, Dynamik pur. Anime Full-Art Stil.
@@ -523,7 +643,7 @@ Action-Szene in der Luft. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus de
 **Header-Bereich:**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
-* Oben Rechts: '140 HP' (rot), gefolgt von Wasser/Drachen-Symbol.
+* Oben Rechts: '140 KP' (rot), gefolgt von Wasser/Drachen-Symbol.
 
 **Haupt-Artwork:**
 Epische Unterwasser-Kampfszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Person und [POKEMON_NAME] im Zentrum eines wirbelnden Unterwasser-Mahlstroms. Glühende Korallen in Magenta und Orange, uralte versunkene Ruinen, aufsteigende Luftblasen. Sonnenlicht bricht von oben durch das Wasser in Caustics-Mustern.
@@ -664,7 +784,7 @@ Edles, goldenes Porträt im Gold-Rare-Stil. WICHTIG: Übernimm die exakten Gesic
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines Kristall-Banner mit dem Text 'TERA'.
 * Titel: '[HOLDER_NAME]s [POKEMON_NAME]' (groß, fett, kristallweiß mit Regenbogen-Schimmer).
-* Oben Rechts: '200 HP' (groß, kristallblau), Tera-Symbol.
+* Oben Rechts: '200 KP' (groß, kristallblau), Tera-Symbol.
 
 **Haupt-Artwork:**
 Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht neben ihrem [POKEMON_NAME] in einer Tera-Kristall-Formation – gigantische prismatische Kristalle in allen Juwelenfarben ragen aus dem Boden. Das Pokémon ist in kristallines Licht gehüllt (Tera-Form). Lichtstrahlen brechen sich in tausend Farben an den Kristallflächen. Anime-Stil, ultra-premium.
@@ -697,7 +817,7 @@ Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Ref
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlos).
-* Oben Rechts: '80 HP' (groß, rot), gefolgt von einem Element-Symbol.
+* Oben Rechts: '80 KP' (groß, rot), gefolgt von einem Element-Symbol.
 
 **Haupt-Artwork:**
 Eine extrem stilisierte, grafische Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr Partner-[POKEMON_NAME] springen fröhlich zusammen in die Luft. Der Hintergrund besteht aus bunten, geometrischen Blöcken, Treppenstufen und grafischen Mustern.
@@ -751,7 +871,7 @@ Eine extrem stilisierte, grafische Illustration. WICHTIG: Übernimm die exakten 
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME] ex' (groß, fett, schwarz, mit glänzendem "ex" Symbol).
-* Oben Rechts: '170 HP' (groß, schwarz), gefolgt von einem Element-Symbol.
+* Oben Rechts: '170 KP' (groß, schwarz), gefolgt von einem Element-Symbol.
 
 **Haupt-Artwork:**
 Eine übertrieben coole und verspielte Illustration mit fetten Linien. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] geben sich ein High-Five oder machen eine witzige Pose. Der Hintergrund ist ein farbenfrohes Chaos aus Doodle-Kunst (Sterne, Blitze, Blumenmuster).
@@ -806,7 +926,7 @@ Eine coole, verspielte Illustration mit fetten Linien. WICHTIG: Übernimm die ex
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines silbernes Banner mit dem Text 'MEGA'.
 * Titel: 'Mega [POKEMON_NAME] & [HOLDER_NAME]' (groß, fett, leuchtend).
-* Oben Rechts: '310 HP' (groß, rot), gefolgt von einem Element-Symbol.
+* Oben Rechts: '310 KP' (groß, rot), gefolgt von einem Element-Symbol.
 
 **Haupt-Artwork:**
 Monumentale, energiegeladene Anime-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht episch neben ihrem massiven [POKEMON_NAME]. Beide sind von einer gewaltigen elementaren Energie-Aura umhüllt – wie Flammen oder Blitze, aber in intensivem Magenta und Cyan. Der Hintergrund zeigt eine dramatische Naturlandschaft (Gebirge, offene Ebene), die durch die Energiewellen in Fragmente bricht. Anime Full-Art, überwältigend, episch.
@@ -974,7 +1094,7 @@ Traumhaft schöne Aquarell-Illustration. WICHTIG: Übernimm die exakten Gesichts
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines zartes Banner: 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarze Tinte mit leichter Aquarell-Textur).
-* Oben Rechts: '110 HP' (zartes Rot), Natur-Symbol.
+* Oben Rechts: '110 KP' (zartes Rot), Natur-Symbol.
 
 **Haupt-Artwork:**
 Malerische Aquarell-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Person und [POKEMON_NAME] in einer wunderschönen Aquarell-Naturszene – Wiese, Blumen, sanftes Licht. Alles fließt in weichen Pinselstrichen ineinander. Die Farben des Pokémons verlaufen spektakulär in den Hintergrund. Stimmung: Friedvoll, künstlerisch, premium.
@@ -1002,7 +1122,7 @@ Malerische Aquarell-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus d
 **Header-Bereich (Kartenkopf):**
 * Oben Links: 'BASIS' in klassischem schwarzen Banner-Stil.
 * Titel: '[HOLDER_NAME]s [POKEMON_NAME]' (groß, fett, schwarz, klassische Schriftart).
-* HP: '[POKEMON_NAME] – 60 HP' (klassisches Layout oben rechts).
+* KP: '[POKEMON_NAME] – 60 KP' (klassisches Layout oben rechts).
 
 **Haupt-Artwork (ovaler Rahmen):**
 Klassisch gerahmtes Artwork im Original-Pokémon-Stil der 1990er. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person und ihr [POKEMON_NAME] sind im simplen, klaren Zeichenstil der Original-Pokémon-Karten gezeichnet – keine komplexen Schatten, klare Konturen, einfache Farben. Einfarbiger Pastell-Hintergrund passend zum Pokémon-Typ. Oval gerahmtes Bild mit farbigem Rahmen.
@@ -1031,7 +1151,7 @@ Klassisch gerahmtes Artwork im Original-Pokémon-Stil der 1990er. WICHTIG: Über
 **Header-Bereich (Kartenkopf):**
 * Oben Links: Kleines rosa/lila Banner: 'BASIS ❤'.
 * Titel: '[HOLDER_NAME] & Chibi-[POKEMON_NAME]' (groß, fett, schwarz).
-* Oben Rechts: '60 HP' (rosa), kleines Herz-Symbol.
+* Oben Rechts: '60 KP' (rosa), kleines Herz-Symbol.
 
 **Haupt-Artwork:**
 Ultraniede Chibi-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild, aber im Chibi-Stil vereinfacht! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person als supersüßer Chibi-Charakter mit übertrieben großem Kopf und kleinem Körper. Ihr [POKEMON_NAME] ebenfalls als Chibi. Beide machen eine fröhliche Pose. Hintergrund: Bunte Sterne, Herzchen, Blümchen in Pastell. Alles ist rund, süß und fröhlich.

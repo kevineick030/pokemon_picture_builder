@@ -353,6 +353,7 @@ export default function Home() {
   const [selectedPrompt, setSelectedPrompt] = useState<PromptTemplate | null>(null);
   const [holderName, setHolderName] = useState("");
   const [pokemonName, setPokemonName] = useState("");
+  const [withPokemon, setWithPokemon] = useState(true); // pro Design wählbar: mit/ohne Begleit-Pokémon
   const [personDescription, setPersonDescription] = useState("");
   const [useReferenceImage, setUseReferenceImage] = useState(false);
   const [referenceImageFile, setReferenceImageFile] = useState<File | null>(null);
@@ -403,6 +404,17 @@ export default function Home() {
   const updateStat = (field: keyof CardStats, value: string) =>
     setStats((prev) => ({ ...prev, [field]: value }));
 
+  // Selecting a design sets the default mode (mit Pokémon) from the design,
+  // but the user can override it per card via the toggle.
+  const selectPrompt = (p: PromptTemplate) => {
+    setSelectedPrompt(p);
+    setWithPokemon(p.hasPokemon);
+    if (!p.hasPokemon) setPokemonName("");
+    setError(null);
+    setCustomPrompt(null);
+    setActiveTab("form");
+  };
+
   const filteredPrompts = PROMPTS.filter(
     (p) =>
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -410,15 +422,32 @@ export default function Home() {
       p.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Assembled prompt text (used for preview and as seed for customPrompt)
+  // Assembled prompt text (used for preview and as seed for customPrompt).
+  // Mirrors the server's with/without-Pokémon handling for an accurate preview.
   const assembledPromptText = selectedPrompt
-    ? selectedPrompt.template
-        .replace(/\[HOLDER_NAME\]/g, holderName || "[NAME]")
-        .replace(/\[POKEMON_NAME\]/g, pokemonName || "[POKÉMON]")
-        .replace(
-          /\[FOTO_BESCHREIBUNG_DER_PERSON\]/g,
-          personDescription || autoDescription || "[BESCHREIBUNG]"
-        ) + buildStatsAppendix(stats)
+    ? (() => {
+        let t = selectedPrompt.template;
+        if (withPokemon) {
+          t = t.replace(/\[\[POKE:([\s\S]*?)\]\]/g, "$1").replace(/\[\[SOLO:[\s\S]*?\]\]/g, "");
+        } else {
+          t = t.replace(/\[\[SOLO:([\s\S]*?)\]\]/g, "$1").replace(/\[\[POKE:[\s\S]*?\]\]/g, "");
+          t = t
+            .replace(/Mega\s*\[POKEMON_NAME\]/gi, "[POKEMON_NAME]")
+            .replace(/Chibi-\[POKEMON_NAME\]/g, "[POKEMON_NAME]")
+            .replace(/\s*&\s*\[POKEMON_NAME\]/g, "")
+            .replace(/\[POKEMON_NAME\]\s*&\s*/g, "")
+            .replace(/\[HOLDER_NAME\]s\s+\[POKEMON_NAME\]/g, "[HOLDER_NAME]")
+            .replace(/\[POKEMON_NAME\]/g, "")
+            + "\n\n(SOLO-MODUS: Person allein, ohne Begleit-Pokémon.)";
+        }
+        return t
+          .replace(/\[HOLDER_NAME\]/g, holderName || "[NAME]")
+          .replace(/\[POKEMON_NAME\]/g, pokemonName || "[POKÉMON]")
+          .replace(
+            /\[FOTO_BESCHREIBUNG_DER_PERSON\]/g,
+            personDescription || autoDescription || "[BESCHREIBUNG]"
+          ) + buildStatsAppendix(stats);
+      })()
     : "";
 
   const typeGlow = stats.type ? TYPE_CONFIG[stats.type]?.glow : undefined;
@@ -443,7 +472,8 @@ export default function Home() {
       body: JSON.stringify({
         promptId: selectedPrompt!.id,
         holderName: holderName.trim(),
-        pokemonName: pokemonName.trim(),
+        pokemonName: withPokemon ? pokemonName.trim() : "",
+        withPokemon,
         personDescription: useReferenceImage ? personDescription.trim() : "",
         referenceImageBase64,
         referenceImageMimeType,
@@ -468,6 +498,7 @@ export default function Home() {
       imageBase64: data.imageBase64,
       mimeType: data.mimeType || "image/png",
       personDescription: data.personDescription || "",
+      supabaseUrl: data.supabaseUrl ?? null,
     };
   };
 
@@ -517,7 +548,7 @@ export default function Home() {
   const validate = (): string | null => {
     if (!selectedPrompt) return "Bitte wähle zuerst ein Design aus.";
     if (!holderName.trim()) return "Bitte gib den Namen der Person ein.";
-    if (selectedPrompt.hasPokemon && !pokemonName.trim()) return "Dieses Design benötigt einen Pokémon-Namen.";
+    if (withPokemon && !pokemonName.trim()) return "Bitte gib einen Pokémon-Namen ein oder schalte 'Mit Begleit-Pokémon' aus.";
     if (useReferenceImage && !referenceImageFile && !personDescription.trim())
       return "Bitte lade ein Referenzbild hoch oder gib eine Personenbeschreibung ein.";
     return null;
@@ -681,7 +712,7 @@ export default function Home() {
                   ) : (
                     filteredPrompts.map((p) => (
                       <PromptCard key={p.id} prompt={p} selected={selectedPrompt?.id === p.id}
-                        onClick={() => { setSelectedPrompt(p); if (!p.hasPokemon) setPokemonName(""); setError(null); setCustomPrompt(null); setActiveTab("form"); }} />
+                        onClick={() => selectPrompt(p)} />
                     ))
                   )}
                 </div>
@@ -703,7 +734,7 @@ export default function Home() {
                         <div className="space-y-1.5 mt-1">
                           {prompts.map((p) => (
                             <PromptCard key={p.id} prompt={p} selected={selectedPrompt?.id === p.id}
-                              onClick={() => { setSelectedPrompt(p); if (!p.hasPokemon) setPokemonName(""); setError(null); setCustomPrompt(null); setActiveTab("form"); }} />
+                              onClick={() => selectPrompt(p)} />
                           ))}
                         </div>
                       )}
@@ -759,8 +790,26 @@ export default function Home() {
                 />
               </div>
 
+              {/* Mit / ohne Begleit-Pokémon (für JEDES Design wählbar) */}
+              {selectedPrompt && (
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900 border border-slate-700">
+                  <div>
+                    <p className="font-semibold text-slate-200 text-sm">Mit Begleit-Pokémon</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {withPokemon ? "Person + Pokémon im Artwork" : "Person allein (Pokémon-Stil bleibt)"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => { setWithPokemon((v) => !v); if (withPokemon) setPokemonName(""); }}
+                    className={`w-12 h-6 rounded-full transition-all relative shrink-0 ${withPokemon ? "bg-purple-600" : "bg-slate-700"}`}
+                  >
+                    <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${withPokemon ? "left-6" : "left-0.5"}`} />
+                  </button>
+                </div>
+              )}
+
               {/* Pokemon Name */}
-              {selectedPrompt?.hasPokemon && (
+              {selectedPrompt && withPokemon && (
                 <div>
                   <label className="block text-sm font-semibold text-slate-300 mb-1.5">
                     Pokémon / Kreatur <span className="text-red-400">*</span>
