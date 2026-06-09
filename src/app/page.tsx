@@ -49,6 +49,7 @@ interface GenerateResult {
   imageBase64: string;
   mimeType: string;
   personDescription: string;
+  supabaseUrl?: string | null;
 }
 
 type ActiveTab = "designs" | "form" | "result";
@@ -483,9 +484,11 @@ export default function Home() {
       ...prev.slice(0, 7),
     ]);
 
+    // supabaseUrl kommt jetzt direkt vom Server (service_role key, kein Browser-Upload mehr)
     const newEntry: GalleryCard = {
       id: uid(), timestamp: Date.now(), imageBase64: finalBase64, mimeType: finalMime,
       promptName: selectedPrompt?.name ?? "", holderName: holderName.trim(), pokemonName: pokemonName.trim(),
+      supabaseUrl: result.supabaseUrl ?? undefined,
     };
 
     setGallery((prev) => {
@@ -494,26 +497,6 @@ export default function Home() {
       return updated;
     });
     setActiveTab("result");
-
-    // Upload zu Supabase im Hintergrund (non-blocking)
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      uploadCardToSupabase({
-        imageBase64: finalBase64,
-        mimeType: finalMime,
-        holderName: holderName.trim(),
-        pokemonName: pokemonName.trim(),
-        promptId: selectedPrompt?.id ?? 0,
-        promptName: selectedPrompt?.name ?? "",
-      }).then((url) => {
-        if (url) {
-          setGallery((prev) => {
-            const updated = prev.map((c) => c.id === newEntry.id ? { ...c, supabaseUrl: url } : c);
-            saveGallery(updated);
-            return updated;
-          });
-        }
-      });
-    }
   };
 
   // ── Handlers ──────────────────────────────────────────────────────────────

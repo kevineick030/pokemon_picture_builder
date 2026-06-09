@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI, Modality } from "@google/genai";
+import { createClient } from "@supabase/supabase-js";
 import { PROMPTS } from "@/data/prompts";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
@@ -12,6 +13,48 @@ const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image-previe
 // Vision model for describing the reference photo. gemini-2.0-flash was retired
 // by Google; gemini-2.5-flash is the current, widely available successor.
 const VISION_MODEL = process.env.GEMINI_VISION_MODEL || "gemini-2.5-flash";
+
+// Supabase server-side client (service_role key — bypasses RLS + host restrictions).
+// Never exposed to the browser. Falls back gracefully if env vars not set.
+function getSupabaseServer() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
+async function saveCardToSupabase(
+  imageBase64: string,
+  holderName: string,
+  pokemonName: string,
+  promptId: number,
+  promptName: string
+): Promise<string | null> {
+  const supabase = getSupabaseServer();
+  if (!supabase) return null;
+  try {
+    const buf = Buffer.from(imageBase64, "base64");
+    const filename = `${Date.now()}_${(holderName || "card").replace(/\s+/g, "-")}.png`;
+    const { error: upErr } = await supabase.storage
+      .from("mrc-cards")
+      .upload(filename, buf, { contentType: "image/png", upsert: false });
+    if (upErr) { console.error("Supabase storage upload error:", upErr.message); return null; }
+    const { data: urlData } = supabase.storage.from("mrc-cards").getPublicUrl(filename);
+    const publicUrl = urlData.publicUrl;
+    const { error: dbErr } = await supabase.from("mrc_generated_cards").insert({
+      storage_url: publicUrl,
+      holder_name: holderName || null,
+      pokemon_name: pokemonName || null,
+      prompt_id: promptId,
+      prompt_name: promptName,
+    });
+    if (dbErr) console.error("Supabase DB insert error:", dbErr.message);
+    return publicUrl;
+  } catch (err) {
+    console.error("Supabase save failed:", err);
+    return null;
+  }
+}
 
 // Prepended to every prompt to enforce anime style for people and correct text spelling.
 const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, überschreiben alles andere):
@@ -266,11 +309,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Save to Supabase server-side (service_role key, non-blocking on failure)
+    const supabaseUrl = await saveCardToSupabase(
+      imageData,
+      holderName || "",
+      pokemonName || "",
+      promptId ?? 0,
+      PROMPTS.find((p) => p.id === promptId)?.name ?? ""
+    );
+
     return NextResponse.json({
       imageBase64: imageData,
       mimeType: imageMimeType,
       personDescription: fotoDescription,
       usedModel,
+      supabaseUrl, // null wenn nicht konfiguriert, URL wenn gespeichert
     });
   } catch (err: any) {
     console.error("Gemini API Error:", err);
