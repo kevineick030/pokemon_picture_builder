@@ -367,7 +367,6 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   // Variant mode
-  const [variantMode, setVariantMode] = useState(false);
   const [variants, setVariants] = useState<GenerateResult[] | null>(null);
   const [variantLoading, setVariantLoading] = useState(false);
 
@@ -394,7 +393,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [exporting, setExporting] = useState(false);
   const [showBatch, setShowBatch] = useState(false);
-  const [activeTab, setActiveTab] = useState<ActiveTab>("form");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("designs");
   const [loadingStep, setLoadingStep] = useState<string>("Karte wird generiert…");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -669,7 +668,7 @@ export default function Home() {
             <div>
               <h1 className="text-lg lg:text-xl font-bold text-yellow-400 tracking-tight">My Rookie Card</h1>
               <p className="text-[11px] text-slate-400 hidden sm:block">
-                TCG-Kartengenerator · A4/A6/63×88 mm
+                TCG-Kartengenerator · A4/A6/64×88 mm
               </p>
             </div>
             <div className="ml-auto flex items-center gap-2">
@@ -946,7 +945,7 @@ export default function Home() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-slate-400 mb-1">HP</label>
+                        <label className="block text-xs font-semibold text-slate-400 mb-1">KP</label>
                         <input type="number" placeholder="z.B. 80" value={stats.hp}
                           onChange={(e) => updateStat("hp", e.target.value)}
                           min="10" max="999" step="10"
@@ -1069,19 +1068,22 @@ export default function Home() {
                     <p className={`text-xs flex items-center gap-1.5 ${holderName.trim() ? "text-green-500" : "text-slate-500"}`}>
                       {holderName.trim() ? "✓" : "○"} Name der Person eingeben
                     </p>
+                    {selectedPrompt && withPokemon && (
+                      <p className={`text-xs flex items-center gap-1.5 ${pokemonName.trim() ? "text-green-500" : "text-slate-500"}`}>
+                        {pokemonName.trim() ? "✓" : "○"} Pokémon-Name eingeben
+                      </p>
+                    )}
                   </div>
                 )}
 
-                {/* Variant mode toggle */}
+                {/* Main generate button */}
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleGenerate}
                     disabled={!canGenerate}
                     className={`flex-1 py-4 rounded-xl font-bold text-base transition-all ${
                       canGenerate
-                        ? variantMode
-                          ? "bg-slate-800 hover:bg-slate-700 border border-purple-600 text-purple-300"
-                          : "bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-lg active:scale-[0.98]"
+                        ? "bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-lg active:scale-[0.98]"
                         : "bg-slate-800 text-slate-600 cursor-not-allowed"
                     }`}
                   >
@@ -1096,29 +1098,18 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Variant mode button */}
+                {/* Varianten-Button: direkt generieren, kein Modus-Wechsel nötig */}
                 <button
-                  onClick={variantMode ? handleGenerateVariants : () => setVariantMode(!variantMode)}
-                  disabled={variantMode && !canGenerate}
+                  onClick={handleGenerateVariants}
+                  disabled={!canGenerate}
                   className={`w-full py-3 rounded-xl font-semibold text-sm transition-all border ${
-                    variantMode
-                      ? "bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white border-transparent shadow-lg"
-                      : "bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200"
-                  } ${variantMode && !canGenerate ? "opacity-50 cursor-not-allowed" : ""}`}
+                    canGenerate
+                      ? "bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200"
+                      : "bg-slate-900 border-slate-800 text-slate-700 cursor-not-allowed"
+                  }`}
                 >
-                  {variantLoading
-                    ? "2 Varianten werden generiert…"
-                    : variantMode
-                    ? "⚡ 2 Varianten generieren (doppelte API-Zeit)"
-                    : "🔀 Varianten-Modus aktivieren"}
+                  {variantLoading ? "2 Varianten werden generiert…" : "⚡ 2 Varianten generieren"}
                 </button>
-
-                {variantMode && (
-                  <button onClick={() => setVariantMode(false)}
-                    className="w-full text-xs text-slate-600 hover:text-slate-400 py-1 transition-colors">
-                    Varianten-Modus deaktivieren
-                  </button>
-                )}
               </div>
 
               {/* Editable prompt */}
@@ -1129,7 +1120,7 @@ export default function Home() {
                     className="w-full flex items-center justify-between px-4 py-2.5 bg-slate-900 hover:bg-slate-800 transition-colors text-xs"
                   >
                     <span className="text-slate-400">
-                      Prompt{customPrompt != null && <span className="ml-1.5 text-yellow-400 font-semibold">✏ bearbeitet</span>}
+                      🔧 Prompt bearbeiten{customPrompt != null && <span className="ml-1.5 text-yellow-400 font-semibold">✏ angepasst</span>}
                     </span>
                     <span className="flex items-center gap-2 text-slate-500">
                       {customPrompt != null && (
@@ -1140,7 +1131,7 @@ export default function Home() {
                           ↺ Reset
                         </span>
                       )}
-                      {showPromptPreview ? "▲" : "▼ anzeigen / bearbeiten"}
+                      {showPromptPreview ? "▲" : "▼ optional"}
                     </span>
                   </button>
                   {showPromptPreview && (
@@ -1180,7 +1171,7 @@ export default function Home() {
           >
             <div className="p-3 border-b border-slate-800 flex items-center justify-between shrink-0">
               <h3 className="font-semibold text-slate-200 text-sm">
-                {variantMode && variants ? "Varianten – Wähle eine aus" : "Generiertes Bild"}
+                {variants && !variantLoading ? "Varianten – Wähle eine aus" : "Generiertes Bild"}
               </h3>
               {resultImage && (
                 <button onClick={handleDownload} title="PNG herunterladen"
@@ -1268,7 +1259,7 @@ export default function Home() {
 
                       <button onClick={() => openPrintWindow(resultImage, resultMimeType)}
                         className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
-                        🖨️ Einzeln drucken (A6 · 63×88 mm)
+                        🖨️ Einzeln drucken (A6 · 64×88 mm)
                       </button>
 
                       <button onClick={addToPrintQueue}
@@ -1278,7 +1269,7 @@ export default function Home() {
 
                       <button onClick={handleExportPrint} disabled={exporting}
                         className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-semibold text-sm transition-all">
-                        {exporting ? "Exportiere…" : "💾 PNG 300 DPI (744×1039 px)"}
+                        {exporting ? "Exportiere…" : "💾 PNG 300 DPI (756×1039 px)"}
                       </button>
 
                       <button onClick={handleDownload}
@@ -1291,7 +1282,7 @@ export default function Home() {
                     <div className="p-3 rounded-lg bg-blue-950/30 border border-blue-900/50 text-xs text-blue-300 space-y-0.5">
                       <p className="font-semibold text-blue-200">📐 Drucktipps</p>
                       <p>Papier: A6 (105×148mm) · Skalierung: 100% · Randlos</p>
-                      <p>Ergebnis: exakt <strong>63×88 mm</strong></p>
+                      <p>Ergebnis: exakt <strong>64×88 mm</strong></p>
                     </div>
                   </>
                 )}
@@ -1392,12 +1383,12 @@ export default function Home() {
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all" />
                         {/* Cloud-Sync-Indikator */}
                         <span className={`absolute top-1 right-1 text-[9px] rounded-full px-1 ${card.supabaseUrl ? "bg-green-500/80 text-white" : "bg-slate-700/80 text-slate-400"}`}>
-                          {card.supabaseUrl ? "☁" : "⏳"}
+                          {card.supabaseUrl ? "☁" : "💾"}
                         </span>
                       </button>
                     ))}
                   </div>
-                  <p className="text-[10px] text-slate-600">☁ = in Supabase gespeichert · max. {MAX_GALLERY} lokal</p>
+                  <p className="text-[10px] text-slate-600">💾 lokal · ☁ in Cloud · max. {MAX_GALLERY} Karten</p>
                 </div>
               )}
             </div>
