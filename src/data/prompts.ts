@@ -11,6 +11,7 @@ export interface PromptTemplate {
 
 export const CATEGORIES = [
   "Premium Alt-Art ⭐ (Top-Designs)",
+  "Ikonische Klassiker 🏆 (jeder kennt sie)",
   "Floral & Natur – Holo-Highlights",
   "Feuer, Sturm & Elementarkräfte",
   "Klassische Full-Art Trainerkarten",
@@ -52,7 +53,7 @@ Ruhige, atmosphärische Dachszene bei Nacht. WICHTIG: Übernimm die exakten Gesi
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Energie-Symbol] 'Mondschein-Schritt' (fett, schwarz), rechtsbündig '70'.
 * Angriff 2: [Zwei Energie-Symbole] 'Nachthimmel-Sturz' (fett, schwarz), rechtsbündig '150'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illus. MoonlightMRC', Set-Infos 'MRC-SIR 06 ★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -80,7 +81,7 @@ Hochdynamische, kinoreife Feuerszene in Bewegung. WICHTIG: Übernimm die exakten
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Feuer-Symbol] 'Glutschwinge' (fett, schwarz), rechtsbündig '60'.
 * Angriff 2: [Drei Feuer-Symbole] 'Infernosturz' (fett, schwarz), rechtsbündig '180'.
-* Werte unten: weakness water-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+* Werte unten: weakness water-symbol ×2, resistance type-symbol −30, Rückzug [2 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illus. InfernoMRC', Set-Infos 'MRC-SIR 07 ★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -108,7 +109,7 @@ Friedliche, malerische Szene in der goldenen Stunde. WICHTIG: Übernimm die exak
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Wasser-Symbol] 'Stille Welle' (fett, schwarz), rechtsbündig '50'. Text: 'Heile 20 Schadenspunkte von diesem Pokémon.'
 * Angriff 2: [Zwei Energie-Symbole] 'Abendglanz' (fett, schwarz), rechtsbündig '110'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illus. SunsetMRC', Set-Infos 'MRC-IR 08 ★'. Copyright: '© My Rookie Card'.`,
   },
@@ -136,9 +137,129 @@ Prismatische Tera-Kristall-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmal
 **Textfelder (Unteres Drittel):**
 * Fähigkeit (rotes 'Fähigkeit'-Badge links, Name fett daneben): 'Prisma-Schild' Beschreibung darunter: 'Solange dieses Pokémon eine Tera-Energie trägt, nimmt es 30 Schadenspunkte weniger.'
 * Angriff: [Drei Energie-Symbole] 'Kristall-Brecher' (fett, schwarz), rechtsbündig '200'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [2 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illus. TeraMRC', Set-Infos 'MRC-TERA 09 ★★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // KATEGORIE: IKONISCHE KLASSIKER 🏆 (JEDER KENNT SIE)
+  // Die berühmtesten Karten-Archetypen aller Epochen: das 1999er Basisset-Holo,
+  // die Gold-Star-Shiny der EX-Ära, die GX-Full-Art und die VMAX Rainbow Secret.
+  // Markierungen [[POKE:…]]/[[SOLO:…]] steuern die "mit/ohne Pokémon"-Variante.
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    id: 47,
+    name: "1999 Holo-Klassiker (Basis-Set)",
+    subtitle: "Der ikonische gelbe Rahmen mit Cosmos-Holo – wie Glurak 1999",
+    category: "Ikonische Klassiker 🏆 (jeder kennt sie)",
+    hasPokemon: true,
+    icon: "🟡",
+    color: "from-yellow-400 to-amber-600",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). KEIN Full-Bleed – dies ist eine KLASSISCHE Karte mit dickem Rahmen und separatem Artwork-Fenster im oberen Drittel.
+
+**Kunststil:** Authentischer Pokémon TCG Stil des originalen Basis-Sets von 1999 (Wizards-of-the-Coast-Ära) – die ikonischste Sammelkarte überhaupt. AUSNAHME zur Silber-Regel: Diese Karte hat den klassischen DICKEN GELBEN Rahmen (kräftiges Sonnengelb) mit abgerundeten Ecken. Das Artwork sitzt in einem separaten, gerahmten RECHTECK-FENSTER – NICHT randlos. NUR innerhalb dieses Artwork-Fensters schimmert das klassische "Cosmos"-Holofoil (galaktisches Sternen-Glitzer-Muster); der Rest der Karte ist matt. Nostalgischer, leicht körniger 90er-Jahre-Druck-Look mit flacher, Aquarell-artiger Kolorierung.
+
+**Header-Bereich (über dem Artwork-Fenster):**
+* Oben Links: Kleines graues Banner 'BASIS'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]]' (klassische, fette schwarze Pokémon-Schrift).
+* Oben Rechts: '120 KP' (rot, klassische Schrift), gefolgt von einem typgerechten Energie-Symbol.
+
+**Haupt-Artwork (im gerahmten Fenster, mit Cosmos-Holo):**
+Klassische 90er-Anime-Illustration im Original-Basisset-Stil. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person[[POKE: steht zusammen mit ihrem [POKEMON_NAME]]][[SOLO: steht allein in heldenhafter Pose]] vor einem einfachen, stimmungsvollen Naturhintergrund – genau wie auf den originalen Karten von 1999. Klare Konturen, flache Kolorierung, keine modernen Effekte. Das Cosmos-Holo lässt das Fenster glitzern.
+
+**Textfelder (unteres Drittel, klassisches Layout):**
+* Dünne Info-Leiste direkt unter dem Artwork: Typ, Größe und Gewicht (fiktiv, passend).
+* Angriff 1: [Energie-Symbol] 'Funkenflug' (fett, schwarz), rechtsbündig '40'.
+* Angriff 2: [Zwei Energie-Symbole] 'Glanz-Stoß' (fett, schwarz), rechtsbündig '90'.
+* Untere Werte-Zeile (klassisch): 'Schwäche' [Typ-Symbol] ×2, 'Resistenz' [Typ-Symbol] −30, 'Rückzug' [2 farblose Energie-Symbole].
+
+**Details:** Unten 'Illus. ClassicMRC', Set-Symbol + ein einzelner Seltenheits-Stern, Nr. '4/102'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 48,
+    name: "Gold Star Shiny ☆ (EX-Ära)",
+    subtitle: "Schillerndes Shiny-Pokémon mit goldenem Stern – legendäre Chase-Karte",
+    category: "Ikonische Klassiker 🏆 (jeder kennt sie)",
+    hasPokemon: true,
+    icon: "✨",
+    color: "from-yellow-300 to-amber-500",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Vollständige Full-Art-Illustration bis an alle Ränder.
+
+**Kunststil:** Authentischer Pokémon TCG "Gold Star" (Pokémon ☆) Stil der EX-Ära (2004–2007) – eine der begehrtesten Chase-Karten aller Zeiten. Das Begleit-Pokémon ist in seiner SELTENEN ALTERNATIV-FARBE (Shiny) dargestellt – also in einer ungewöhnlichen, schillernden Farbgebung statt der normalen. Glänzende goldene Folien-Akzente, funkelnde Sternchen-Partikel, edler holografischer Schimmer über die ganze Karte. Silberner metallischer Rahmen mit goldenen Zierelementen.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines silbernes Banner 'BASIS'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]]', direkt gefolgt von einem glänzenden GOLDENEN STERN ☆ (das ikonische Gold-Star-Symbol direkt neben dem Namen).
+* Oben Rechts: '90 KP' (rot), gefolgt von einem typgerechten Energie-Symbol.
+
+**Haupt-Artwork:**
+Edle, funkelnde Shiny-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person[[POKE: steht neben ihrem [POKEMON_NAME], das in seiner seltenen schillernden Shiny-Alternativfarbe leuchtet]][[SOLO:, umgeben von schillerndem goldenem Shiny-Glanz]]. Goldene Sternenpartikel und holografische Lichtreflexe tanzen durch die Luft. Hochwertige, glänzende Komposition – die Karte wirkt wertvoll und selten.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Energie-Symbol] 'Sternenglanz' (fett, schwarz), rechtsbündig '40'.
+* Angriff 2: [Zwei Energie-Symbole] 'Goldener Komet' (fett, schwarz), rechtsbündig '100'.
+* Untere Werte-Zeile: 'Schwäche' [Typ-Symbol] ×2, 'Resistenz' [Typ-Symbol] −30, 'Rückzug' [1 farbloses Energie-Symbol].
+
+**Details:** Unten links 'Illus. GoldStarMRC', Set-Infos 'MRC-STAR ☆ 003/107 ★★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 49,
+    name: "GX Full-Art (Sonne & Mond)",
+    subtitle: "Glänzende Full-Art mit GX-Angriff – modernes Glanzstück",
+    category: "Ikonische Klassiker 🏆 (jeder kennt sie)",
+    hasPokemon: true,
+    icon: "💥",
+    color: "from-sky-400 to-indigo-600",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Randlose Full-Art-Illustration bis an alle vier Kanten (full-bleed).
+
+**Kunststil:** Authentischer Pokémon TCG "GX" Full-Art Stil der Sonne-&-Mond-Ära (2017–2019) – glänzende, hochglanz-holografische Full-Art-Karte mit dynamischer Action-Pose und kräftigem Glanz. Sattes Cel-Shading, glänzende Lichtreflexe, energiegeladene Aura. Silberner metallischer Rahmen mit feinen holografischen Linien-Mustern im Hintergrund.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines silbernes Banner 'BASIS'.
+* Titel: '[HOLDER_NAME][[POKE: & [POKEMON_NAME]]]-GX' (groß, fett, weiß mit Glanz; das 'GX' im ikonischen glänzenden GX-Logo-Stil).
+* Oben Rechts: '210 KP' (groß), gefolgt von einem typgerechten Energie-Symbol.
+
+**Haupt-Artwork:**
+Dynamische, glänzende GX-Action-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. Die Person steht in kraftvoller, dynamischer Pose[[POKE: gemeinsam mit ihrem [POKEMON_NAME]]], umhüllt von einer leuchtenden typfarbenen Energie-Aura. Holografische Lichtstrahlen und Glanzpartikel füllen den Hintergrund. Bewegung, Glanz und Energie. Stimmung: kraftvoll, glänzend, premium.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Energie-Symbol] 'Kraftstoß' (fett, schwarz), rechtsbündig '70'.
+* GX-Angriff: [Zwei Energie-Symbole] 'Finalschlag-GX' (fett, schwarz, mit kleinem 'GX'-Marker), rechtsbündig '200'. Text: '(Du kannst nur 1 GX-Angriff pro Spiel einsetzen.)'
+* Untere Werte-Zeile: 'Schwäche' [Typ-Symbol] ×2, 'Resistenz' [Typ-Symbol] −30, 'Rückzug' [2 farblose Energie-Symbole].
+
+**Details:** Unten links 'Illus. GXstudioMRC', Set-Infos 'MRC-GX 158/149 ★★'. Copyright: '© My Rookie Card'.`,
+  },
+
+  {
+    id: 50,
+    name: "VMAX Giganto-Form (Rainbow Secret)",
+    subtitle: "Riesige Dynamax-Form im texturierten Regenbogen-Schimmer",
+    category: "Ikonische Klassiker 🏆 (jeder kennt sie)",
+    hasPokemon: true,
+    icon: "🌈",
+    color: "from-fuchsia-400 via-rose-400 to-amber-300",
+    template: `WICHTIGES FORMAT: Exaktes vertikales Sammelkarten-Format (Seitenverhältnis 2.5:3.5). Kein Rand. Randlose Full-Art-Illustration bis an alle vier Kanten (full-bleed).
+
+**Kunststil:** Authentischer Pokémon TCG "VMAX" Rainbow Secret Rare Stil der Schwert-&-Schild-Ära (2020) – eine der bekanntesten modernen Chase-Karten. Das Begleit-Pokémon ist in gigantischer Dynamax-Form (riesig, übermächtig). Die GESAMTE Karte schimmert in einem texturierten Regenbogen-Pastell-Muster (Rainbow Secret) mit fühlbarer, geprägter Oberflächenstruktur. Glänzend, prismatisch, überwältigend. Silberner metallischer Rahmen.
+
+**Header-Bereich (Kartenkopf, halbtransparent über dem Artwork):**
+* Oben Links: Kleines silbernes Banner.
+* Titel: '[[POKE:[POKEMON_NAME]]][[SOLO:[HOLDER_NAME]]] VMAX' (groß, fett, das 'VMAX' im ikonischen dynamischen Logo-Stil).
+* Oben Rechts: '330 KP' (groß, kräftig), gefolgt von einem typgerechten Energie-Symbol.
+
+**Haupt-Artwork:**
+Monumentale Dynamax-Szene in Regenbogen-Schimmer. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Referenzbild! [FOTO_BESCHREIBUNG_DER_PERSON]. [[POKE:Das gigantische, dynamaximierte [POKEMON_NAME] türmt sich gewaltig auf, während die Person klein und heldenhaft davor steht.]][[SOLO:Die Person steht heldenhaft im Zentrum, umhüllt von einer riesigen, wirbelnden Dynamax-Energie-Wolke in Regenbogenfarben.]] Rote Dynamax-Energie-Wolken und prismatische Lichtreflexe füllen die Szene. Alles im texturierten Rainbow-Secret-Schimmer. Stimmung: gigantisch, überwältigend, ultra-selten.
+
+**Textfelder (Unteres Drittel):**
+* Angriff 1: [Energie-Symbol] 'Max-Hieb' (fett, schwarz), rechtsbündig '120'.
+* Angriff 2 (G-Max): [Drei Energie-Symbole] 'G-Max-Sturm' (fett, schwarz), rechtsbündig '250'.
+* Untere Werte-Zeile: 'Schwäche' [Typ-Symbol] ×2, 'Resistenz' [Typ-Symbol] −30, 'Rückzug' [3 farblose Energie-Symbole].
+
+**Details:** Unten links 'Illus. VMAXstudioMRC', Set-Infos 'MRC-VMAX 074/073 ★★★'. Copyright: '© My Rookie Card'.`,
   },
 
   // ════════════════════════════════════════════════════════════════════════
@@ -159,7 +280,7 @@ Prismatische Tera-Kristall-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmal
 **Kunststil:** Authentischer Pokémon TCG Special Illustration Rare (SIR) Stil. Lebendiges Anime-Cel-Shading mit klaren, kräftigen schwarzen Outlines. Der Hintergrund ist eine üppige tropische Blütenpracht – riesige leuchtende Blüten in Magenta, Koralle, Smaragdgrün und Sonnengelb füllen die gesamte Karte. Organische, fließende Formen. Sehr reich an Kontrast und Sättigung – perfekt für Holo-Vinyl.
 
 **Header-Bereich (Kartenkopf):**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlos).
 * Oben Rechts: '120 KP' (groß, rot), gefolgt von einem Gras/Natur-Symbol.
 
@@ -169,7 +290,7 @@ Prismatische Tera-Kristall-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmal
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Gras-Symbol] 'Blütensturm' (fett, schwarz), rechtsbündig '60'. Text: 'Heile 20 Schadenspunkte von diesem Pokémon.'
 * Angriff 2: [Zwei Gras-Symbole] 'Paradieshüter' (fett, schwarz), rechtsbündig '100'.
-* Werte unten: weakness fire-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness fire-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. FloralMRC', Set-Infos 'MRC-SIR 01 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -278,7 +399,7 @@ Verzauberter Winterwaldszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale au
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Wasser-Symbol] 'Eishauch' (fett, schwarz), rechtsbündig '40'. Text: 'Das gegnerische Pokémon ist jetzt eingefroren.'
 * Angriff 2: [Zwei Wasser-Symbole] 'Polarwirbel' (fett, schwarz), rechtsbündig '90'.
-* Werte unten: weakness fire-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+* Werte unten: weakness fire-symbol ×2, resistance type-symbol −30, Rückzug [2 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. FrostMRC', Set-Infos 'MRC-WINTER 04/10 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -301,7 +422,7 @@ Verzauberter Winterwaldszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale au
 **Kunststil:** Authentischer Pokémon TCG Full-Art Rare Stil. Extrem dramatische Feuer-Komposition. Intensives Rot, Orange und Gelb gegen tiefstes Schwarz. Glühende Lavaströme, aufsteigende Funken und Asche. Dramatischer Kontrast – ideal für Holo-Vinyl, wo Feuer und Lava regelrecht zu leuchten scheinen.
 
 **Header-Bereich (Kartenkopf):**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlos).
 * Oben Rechts: '150 KP' (groß, rot), gefolgt von Feuer-Symbol.
 
@@ -311,7 +432,7 @@ Epische Vulkan-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Re
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Feuer-Symbol] 'Lava-Stoß' (fett, schwarz), rechtsbündig '50'. Text: 'Der Gegner ist jetzt verbrannt.'
 * Angriff 2: [Drei Feuer-Symbole] 'Eruptions-Inferno' (fett, schwarz), rechtsbündig '130'.
-* Werte unten: weakness water-symbol ×2, resistance type-symbol −30, retreat (3 Sterne).
+* Werte unten: weakness water-symbol ×2, resistance type-symbol −30, Rückzug [3 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. VolcanoMRC', Set-Infos 'MRC-FIRE 01/06 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -329,7 +450,7 @@ Epische Vulkan-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Re
 **Kunststil:** Authentischer Pokémon TCG Full-Art Stil. Dramatisches Naturgewitter. Tiefe lila-graue Sturmwolken, grelle Blitze zucken durch den Himmel. Elektrisch geladene Luft. Der intensive Kontrast zwischen dem dunklen Himmel und den gleißenden Blitzen macht dieses Design auf Holo-Vinyl spektakulär.
 
 **Header-Bereich (Kartenkopf):**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
 * Oben Rechts: '140 KP' (groß, gelb), gefolgt von Blitz-Symbol.
 
@@ -339,7 +460,7 @@ Dramatische Gewitterszene auf einer Bergkuppe. WICHTIG: Übernimm die exakten Ge
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Blitz-Symbol] 'Sturmladung' (fett, schwarz), rechtsbündig '30'. Text: 'Lade 3 Energien auf dieses Pokémon.'
 * Angriff 2: [Drei Blitz-Symbole] 'Gewitterschlag' (fett, schwarz), rechtsbündig '150'. Text: 'Lege alle Energien ab.'
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. StormMRC', Set-Infos 'MRC-THUNDER 02/06 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -529,7 +650,7 @@ Fröhliche, detaillierte Anime-Illustration. WICHTIG: Übernimm die exakten Gesi
 **Kunststil:** Authentischer Pokémon TCG Full-Art Special Illustration Rare (SIR) Stil. Dynamische Anime-Kampf-Illustration mit ultra-scharfen Konturen. Naturgewalten als Hintergrund – zerborstener Felsboden, Blitze, elementare Explosion.
 
 **Header-Bereich (Kartenkopf):**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlose Schrift).
 * Oben Rechts: '150 KP' (rot), gefolgt von einem Element-Symbol.
 
@@ -539,7 +660,7 @@ Epische Action-Szene (Weitwinkel). WICHTIG: Übernimm die exakten Gesichtsmerkma
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Synchron-Schlag' (fett, schwarz), rechtsbündig '50'. Text: 'Fügt 30 Schadenspunkte mehr zu, wenn dieses Pokémon in diesem Zug eingewechselt wurde.'
 * Angriff 2: [Zwei Energie-Symbole] 'Krasse Elementar-Zerstörung' (fett, schwarz), rechtsbündig '120'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat cost (2 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [2 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. MyRookieCard Studio', Set-Infos 'MRC-ACT 01/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -557,7 +678,7 @@ Epische Action-Szene (Weitwinkel). WICHTIG: Übernimm die exakten Gesichtsmerkma
 **Kunststil:** Authentischer Pokémon TCG Hyper-Rare Full-Art Stil. Dramatisches Naturgewitter auf einem Gebirgskamm. Tiefe blaugraue Sturmwolken, grelle Naturblitze, peitschender Wind und Regen. Extrem kontrastreiche Beleuchtung – auf Holo-Vinyl wirken die Blitze wie echtes Leuchten.
 
 **Header-Bereich:**
-* Oben Links: Kleines goldenes Banner mit dem Text 'TAG TEAM'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'TAG TEAM'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
 * Oben Rechts: '180 KP' (rot), gefolgt von einem Blitz/Sturm-Symbol.
 
@@ -567,7 +688,7 @@ Monumentale Naturgewitter-Szene auf einem Gebirgskamm. WICHTIG: Übernimm die ex
 **Textfelder:**
 * Angriff 1: [Zwei Energie-Symbole] 'Gebirgsblitz' (fett, schwarz), rechtsbündig '90'.
 * Angriff 2: [Drei Energie-Symbole] 'Sturmbrecher-Stoß' (fett, schwarz), rechts '160'. Text: 'Lege alle Energiekarten von diesem Pokémon ab.'
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (3 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [3 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. StormMRC', Set-Infos 'MRC-ACT 02/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -585,7 +706,7 @@ Monumentale Naturgewitter-Szene auf einem Gebirgskamm. WICHTIG: Übernimm die ex
 **Kunststil:** Authentischer Pokémon TCG Full-Art Stil. Epische Anime-Illustration mit extremen Größenunterschieden zwischen Person und Pokémon. God Rays durch dramatische Wolken. Natürliche Elementargewalt – Sturm, Magma, Fels.
 
 **Header-Bereich:**
-* Oben Links: Kleines goldenes Banner mit dem Text 'PHASE 1'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'PHASE 1'.
 * Titel: '[HOLDER_NAME]s [POKEMON_NAME]' (groß, fett, schwarz).
 * Oben Rechts: '160 KP' (rot), gefolgt von Energie-Symbol.
 
@@ -595,7 +716,7 @@ Atemberaubende Szene auf einem stürmischen Berg. WICHTIG: Übernimm die exakten
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Urzeitlicher Ruf' (fett, schwarz). Text: 'Durchsuche dein Deck nach einer Item-Karte und nimm sie auf die Hand.'
 * Angriff 2: [Drei Energie-Symbole] 'Zorn der Titanen' (fett, schwarz), rechtsbündig '140'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (3 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [3 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. TitanForge MRC', Set-Infos 'MRC-ACT 03/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -613,7 +734,7 @@ Atemberaubende Szene auf einem stürmischen Berg. WICHTIG: Übernimm die exakten
 **Kunststil:** High-Speed Pokémon TCG Anime-Stil. Extreme Dynamik durch Speedlines und Motion Blur. Lebhafte Farben, kräftige Outlines. Stadt oder Wolken-Kulisse im Hintergrund, komplett natürlich (kein Cyber/Tech).
 
 **Header-Bereich:**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
 * Oben Rechts: '130 KP' (rot), gefolgt von Wind/Elektro-Symbol.
 
@@ -623,7 +744,7 @@ Action-Szene in der Luft. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus de
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Schallmauer-Durchbruch' (fett, schwarz), rechtsbündig '40'. Text: 'Dieses Pokémon kann im nächsten Zug nicht angegriffen werden.'
 * Angriff 2: [Zwei Energie-Symbole] 'Überschall-Sturm-Anschlag' (fett, schwarz), rechtsbündig '100'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. VelocityMRC', Set-Infos 'MRC-ACT 04/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -641,7 +762,7 @@ Action-Szene in der Luft. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus de
 **Kunststil:** Premium Pokémon TCG Secret-Rare Stil. Unterwasser-Illustration mit Caustics (Lichtbrechungs-Muster), tiefen Blautönen und biolumineszenten Akzenten. Organische Unterwasserwelt. Auf Holo-Vinyl: Die Caustics-Muster und das Leuchten wirken wie echtes Wasser.
 
 **Header-Bereich:**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz).
 * Oben Rechts: '140 KP' (rot), gefolgt von Wasser/Drachen-Symbol.
 
@@ -651,7 +772,7 @@ Epische Unterwasser-Kampfszene. WICHTIG: Übernimm die exakten Gesichtsmerkmale 
 **Textfelder:**
 * Angriff 1: [Energie-Symbol] 'Tiefsee-Sog' (fett, schwarz). Text: 'Tausche das aktive Pokémon deines Gegners gegen 1 Pokémon von seiner Bank aus.'
 * Angriff 2: [Drei Energie-Symbole] 'Abyssale Ozean-Explosion' (fett, schwarz), rechtsbündig '130'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [2 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. AbyssalMRC', Set-Infos 'MRC-ACT 05/05 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -792,7 +913,7 @@ Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Ref
 **Textfelder (Unteres Drittel):**
 * FÄHIGKEIT – authentisches TCG-Layout: Horizontale rechteckige Box über volle Kartenbreite. LINKS: ausgefülltes ROTES Rechteck-Badge (abgerundete Ecken) mit weißem Text 'Fähigkeit'. RECHTS DANEBEN gleiche Höhe: fett schwarzer Name 'Tera-Kristall'. DARUNTER: kleiner normaler Text 'Solange dieses Pokémon eine Tera-Energiekarte trägt, nimmt es 20 Schadenspunkte weniger.' KEINE Energie-Symbole.
 * Angriff: [Vier Energie-Symbole] 'Kristall-Brecher' (fett, schwarz), rechtsbündig '180'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (2 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [2 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. TeraMRC', Set-Infos 'TERA-CRYSTAL 001/001 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -815,7 +936,7 @@ Kristall-Tera-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus dem Ref
 **Kunststil:** Flacher, Vektor-basierter Pop-Art-Stil. Keine weichen Schattierungen, sondern klare, vollflächige Farben, dicke Outlines und geometrische Formen. Sehr grafisch, bunt und fröhlich, ähnlich einem modernen Retro-Game-Poster.
 
 **Header-Bereich (Kartenkopf):**
-* Oben Links: Kleines goldenes Banner mit dem Text 'BASIS'.
+* Oben Links: Kleines silbernes Banner mit dem Text 'BASIS'.
 * Titel: '[HOLDER_NAME] & [POKEMON_NAME]' (groß, fett, schwarz, serifenlos).
 * Oben Rechts: '80 KP' (groß, rot), gefolgt von einem Element-Symbol.
 
@@ -824,7 +945,7 @@ Eine extrem stilisierte, grafische Illustration. WICHTIG: Übernimm die exakten 
 
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Energie-Symbol] 'Bunter Funke' (fett, schwarz), rechtsbündig '30'. Text: 'Lege 1 Energiekarte von diesem Pokémon ab.'
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. VectorStudio', Set-Infos 'MRC-PROMO 01'. Copyright: '© My Rookie Card'.`,
   },
@@ -879,7 +1000,7 @@ Eine übertrieben coole und verspielte Illustration mit fetten Linien. WICHTIG: 
 **Textfelder (Unteres Drittel):**
 * FÄHIGKEIT – authentisches TCG-Layout: Horizontale rechteckige Box über volle Kartenbreite. LINKS: ausgefülltes ROTES Rechteck-Badge (abgerundete Ecken) mit weißem Text 'Fähigkeit'. RECHTS DANEBEN gleiche Höhe: fett schwarzer Name 'Letzter Ausweg'. DARUNTER: kleiner normaler Text 'Einmal während deines Zuges kannst du dein Deck nach einer Unterstützerkarte durchsuchen.' KEINE Energie-Symbole.
 * Angriff: [Drei Energie-Symbole] 'Doodle-Schlag' (fett, schwarz), rechtsbündig '60'.
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. DoodleArt', Set-Infos 'MRC-PROMO 03'. Copyright: '© My Rookie Card'.`,
   },
@@ -934,7 +1055,7 @@ Monumentale, energiegeladene Anime-Illustration. WICHTIG: Übernimm die exakten 
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Drei Energie-Symbole] 'Energie-Welle' (fett, schwarz), rechtsbündig '200'.
 * Angriff 2: [Fünf Energie-Symbole] 'Überlastungs-Strahl' (fett, schwarz). Text: 'Wirf eine Münze. Bei Kopf fügt dieser Angriff jedem Pokémon des Gegners 150 Schaden zu.'
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (3 Sterne).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [3 farblose Energie-Symbole].
 
 **Details:** Unten links 'Illustr. EnergyMRC', Set-Infos 'MRC-PROMO 05'. Copyright: '© My Rookie Card'.`,
   },
@@ -1102,7 +1223,7 @@ Malerische Aquarell-Szene. WICHTIG: Übernimm die exakten Gesichtsmerkmale aus d
 **Textfelder (Unteres Drittel):**
 * Angriff 1: [Natur-Symbol] 'Farbsturm' (schwarze Tinte, fett), rechtsbündig '60'.
 * Angriff 2: [Zwei Natur-Symbole] 'Aquarell-Welle' (fett), rechtsbündig '100'. Text: 'Heile 30 Schadenspunkte.'
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. WatercolorMRC', Set-Infos 'MRC-ART 02/03 ★★★'. Copyright: '© My Rookie Card'.`,
   },
@@ -1131,7 +1252,7 @@ Klassisch gerahmtes Artwork im Original-Pokémon-Stil der 1990er. WICHTIG: Über
 * Klassisches Pokémon-Textfeld: Typ, Länge und Gewicht (fiktiv).
 * Attacke 1: 'Entschlossener Blick' – Kosten: [ColorlessSymbol] – Schaden: 10. Text: 'Zeige deinem Gegner 2 Karten aus deiner Hand.'
 * Attacke 2: 'Team-Angriff' – Kosten: [ColorlessSymbol][ColorlessSymbol] – Schaden: 30.
-* Unten: weakness type-icon ×2, resistance type-icon −30, retreat stars im klassischen 1999-Format.
+* Unten: weakness type-icon ×2, resistance type-icon −30, Rückzug-Kosten als farblose Energie-Symbole (klassisches 1999-Format).
 
 **Details:** Klassischer Pokémon-Copyright-Hinweis-Stil. Set-Nr. '001/102'. Copyright: '© My Rookie Card Base Set'.`,
   },
@@ -1158,7 +1279,7 @@ Ultraniede Chibi-Illustration. WICHTIG: Übernimm die exakten Gesichtsmerkmale a
 
 **Textfelder (Unteres Drittel, pastelliger Hintergrund):**
 * Attacke: [Herz-Symbol] 'Chibi-Bumms' (fett), rechtsbündig '20'. Text: 'Der Gegner findet diese Attacke sooo niedlich und kann 1 Zug lang nicht angreifen.'
-* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, retreat (1 Stern ⭐).
+* Werte unten: weakness type-symbol ×2, resistance type-symbol −30, Rückzug [1 farbloses Energie-Symbol].
 
 **Details:** Unten links 'Illustr. ChibiMRC', Set-Infos 'MRC-CUTE 01 ❤'. Copyright: '© My Rookie Card'.`,
   },

@@ -283,6 +283,8 @@ async function exportPrintPng(imageBase64: string, mimeType: string, filename: s
 
 function CategoryBadge({ category }: { category: string }) {
   const colors: Record<string, string> = {
+    "Premium Alt-Art ⭐ (Top-Designs)": "bg-violet-900/50 text-violet-300 border-violet-700",
+    "Ikonische Klassiker 🏆 (jeder kennt sie)": "bg-amber-900/50 text-amber-300 border-amber-700",
     "Floral & Natur – Holo-Highlights": "bg-green-900/50 text-green-300 border-green-700",
     "Feuer, Sturm & Elementarkräfte": "bg-orange-900/50 text-orange-300 border-orange-700",
     "Klassische Full-Art Trainerkarten": "bg-rose-900/50 text-rose-300 border-rose-700",

@@ -75,9 +75,9 @@ const GLOBAL_STYLE_PREFIX = `ÜBERGEORDNETE STILREGELN (höchste Priorität, üb
 
 8. KP STATT HP – SEHR WICHTIG: Deutsche Pokémon-Karten verwenden 'KP' (Kraftpunkte), NIEMALS 'HP'. Schreibe oben rechts den Wert immer als z.B. '120 KP' oder 'KP 120'. Niemals 'HP' auf die Karte schreiben.
 
-9. CINEMATISCHE FULL-ART-KOMPOSITION: Die begehrtesten echten Karten (Special Illustration Rare) sind randlose, kinoreife Illustrationen mit STIMMUNG und ERZÄHLUNG – die Figur LEBT in einer atmosphärischen Szene, keine neutrale Porträt-Pose. Nutze meisterhaftes Licht (goldene Stunde, Mondlicht, Gegenlicht/Rim-Light, Lens-Flare-Funkeln), Tiefe (Vorder-, Mittel-, Hintergrund), schwebende Lichtpartikel und typfarbene Funken um die Figur. Weiche, malerische Aquarell-artige Schattierung wird hoch geschätzt. Die Illustration läuft randlos bis an alle vier Kanten (full-bleed).
+9. CINEMATISCHE FULL-ART-KOMPOSITION: Die begehrtesten echten Karten (Special Illustration Rare) sind randlose, kinoreife Illustrationen mit STIMMUNG und ERZÄHLUNG – die Figur LEBT in einer atmosphärischen Szene, keine neutrale Porträt-Pose. Nutze meisterhaftes Licht (goldene Stunde, Mondlicht, Gegenlicht/Rim-Light, Lens-Flare-Funkeln), Tiefe (Vorder-, Mittel-, Hintergrund), schwebende Lichtpartikel und typfarbene Funken um die Figur. Weiche, malerische Aquarell-artige Schattierung wird hoch geschätzt. Die Illustration läuft randlos bis an alle vier Kanten (full-bleed) – AUSSER ein Design gibt ausdrücklich ein klassisches, gerahmtes Artwork-FENSTER vor (z.B. Retro-/Basisset-Stil von 1999); dann gilt das im Design beschriebene gerahmte Layout statt full-bleed.
 
-10. KARTENRAHMEN: Moderner Pokémon-Kartenrahmen ist SILBERN/metallisch mit abgerundeten Ecken (nicht der alte gelbe Rahmen), außer ein Design schreibt ausdrücklich Gold (Gold Rare) vor.
+10. KARTENRAHMEN: Moderner Pokémon-Kartenrahmen ist SILBERN/metallisch mit abgerundeten Ecken (nicht der alte gelbe Rahmen), außer ein Design schreibt ausdrücklich eine andere Rahmenfarbe vor – z.B. Gold (Gold Rare) oder den klassischen GELBEN Basisset-Rahmen von 1999. In diesen Fällen gilt die im Design genannte Rahmenfarbe.
 
 ---
 
