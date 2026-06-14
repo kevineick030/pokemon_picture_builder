@@ -356,6 +356,7 @@ export default function Home() {
   const [holderName, setHolderName] = useState("");
   const [pokemonName, setPokemonName] = useState("");
   const [withPokemon, setWithPokemon] = useState(true); // pro Design wählbar: mit/ohne Begleit-Pokémon
+  const [imageQuality, setImageQuality] = useState<"normal" | "premium">("normal"); // Flash (gratis) vs Pro (kostet)
   const [personDescription, setPersonDescription] = useState("");
   const [useReferenceImage, setUseReferenceImage] = useState(false);
   const [referenceImageFile, setReferenceImageFile] = useState<File | null>(null);
@@ -475,6 +476,7 @@ export default function Home() {
         holderName: holderName.trim(),
         pokemonName: withPokemon ? pokemonName.trim() : "",
         withPokemon,
+        quality: imageQuality,
         personDescription: useReferenceImage ? personDescription.trim() : "",
         referenceImageBase64,
         referenceImageMimeType,
@@ -805,6 +807,24 @@ export default function Home() {
                     className={`w-12 h-6 rounded-full transition-all relative shrink-0 ${withPokemon ? "bg-purple-600" : "bg-slate-700"}`}
                   >
                     <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${withPokemon ? "left-6" : "left-0.5"}`} />
+                  </button>
+                </div>
+              )}
+
+              {/* Bild-Qualität: Normal (Flash, gratis) vs Premium (Pro, kostet ein paar Cent) */}
+              {selectedPrompt && (
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900 border border-slate-700">
+                  <div>
+                    <p className="font-semibold text-slate-200 text-sm">Premium-Qualität</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {imageQuality === "premium" ? "Beste Qualität (Pro) – kostet ein paar Cent pro Bild" : "Normal (Flash) – schnell & aktuell gratis"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setImageQuality((q) => (q === "premium" ? "normal" : "premium"))}
+                    className={`w-12 h-6 rounded-full transition-all relative shrink-0 ${imageQuality === "premium" ? "bg-amber-500" : "bg-slate-700"}`}
+                  >
+                    <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${imageQuality === "premium" ? "left-6" : "left-0.5"}`} />
                   </button>
                 </div>
               )}

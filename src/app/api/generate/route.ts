@@ -170,7 +170,7 @@ function applyPokemonMode(text: string, withPokemon: boolean): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix, stats, finalPromptOverride, withPokemon = true } = body;
+    const { promptId, holderName, pokemonName, personDescription, referenceImageBase64, referenceImageMimeType, statsAppendix, stats, finalPromptOverride, withPokemon = true, quality = "normal" } = body;
 
     let fotoDescription = personDescription || "";
     let finalPrompt: string;
@@ -274,10 +274,16 @@ export async function POST(req: NextRequest) {
     // Build the ordered list of image models to try. Start with the configured
     // one, then fall back to other known image-capable model IDs. This makes the
     // route resilient to model IDs being renamed / gated per API key.
+    // Pro Anfrage wählbar: "premium" => Pro-Bildmodell zuerst (beste Qualität, kostet),
+    // sonst Flash (günstig/aktuell gratis) zuerst. Das jeweils andere bleibt als Fallback.
+    const FLASH_MODEL = "gemini-3.1-flash-image-preview";
+    const PRO_MODEL = "gemini-3-pro-image-preview";
+    const preferredModel = quality === "premium" ? PRO_MODEL : FLASH_MODEL;
     const candidateModels = Array.from(new Set([
+      preferredModel,
+      FLASH_MODEL,
+      PRO_MODEL,
       IMAGE_MODEL,
-      "gemini-3-pro-image-preview",
-      "gemini-3.1-flash-image-preview",
       "gemini-2.5-flash-image",
       "gemini-2.0-flash-preview-image-generation",
     ]));

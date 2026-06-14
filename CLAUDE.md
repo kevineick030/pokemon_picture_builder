@@ -44,6 +44,7 @@ hoch → Gemini erzeugt die Karte. Die Ergebnisse landen in einer eigenen Supaba
 - **`gemini-3.1-flash-image-preview`** = „Nano Banana 2" (Flash) → etwas einfachere Qualität, aber im Vorschau-Stadium **aktuell gratis** (dasselbe Modell, das der RookieCard-Telegram-Bot nutzt).
 - Um (aktuell) **kostenlos** zu fahren: in Vercel `GEMINI_IMAGE_MODEL = gemini-3.1-flash-image-preview` setzen + neu deployen.
 - ⚠️ „Gratis" gilt nur, solange Google das Modell als Vorschau gratis hält — Ausgaben-Limit im Google-Projekt gesetzt lassen.
+- **Pro-Bild wählbar (UI-Schalter „Premium-Qualität"):** `page.tsx` hat den State `imageQuality` ("normal" | "premium") und schickt ihn als Body-Feld `quality` mit. `route.ts` baut die Modell-Reihenfolge danach: `premium` → Pro-Modell zuerst (kostet), sonst Flash zuerst (gratis). Das jeweils andere bleibt als Fallback. Standard = `normal` (gratis).
 
 ---
 
