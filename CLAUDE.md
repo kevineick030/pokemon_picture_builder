@@ -11,9 +11,20 @@ Kevin ist Endnutzer mit ADHS und will keine Deployment-Überraschungen. Für JED
 
 ---
 
-# My Rookie Card – Wichtige Debugging-Historie
+# Pokémon Picture Builder – Projektkontext
 
-## Kritischer Fehler: "Bild-Modell nicht verfügbar" (War NICHT das Bildmodell!)
+**Was ist das?** Eine Web-App (Next.js auf Vercel), die aus einem hochgeladenen Foto eine
+Pokémon-artige Sammelkarte im Anime-Stil generiert: Nutzer wählt ein Design, lädt ein Foto
+hoch → Gemini erzeugt die Karte. Die Ergebnisse landen in einer eigenen Supabase-DB.
+
+> ⚠️ Trotz „MRC"/„My rookie card" in manchen Namen ist das ein **eigenständiges** Projekt mit
+> **eigener** Supabase-DB (`csmxozlcpuuzqlprgdps`) – nicht mit der Fußball-Website vermischen.
+
+---
+
+## Wichtige Debugging-Historie
+
+### Kritischer Fehler: "Bild-Modell nicht verfügbar" (War NICHT das Bildmodell!)
 
 **Was passierte:** Stundenlanger Fehler-Loop, bei dem scheinbar das Bild-Generierungsmodell nicht verfügbar war.
 
@@ -88,5 +99,6 @@ GETRENNT vom Fußball-Business-Projekt "My rookie card v2". Nicht vermischen!
 
 - Next.js App Router + TypeScript + Tailwind CSS
 - `@google/genai` v2.8.0 — `GoogleGenAI`, `ai.models.generateContent()`, `Modality.IMAGE`
-- Vercel Deployment, Branch: `claude/zen-babbage-42g1C` + `main`
+- Vercel Deployment, Branch: **`main`** (nur `main` = produktiv; kein Preview-Branch mehr — der alte `claude/zen-…`-Branch wurde am 14.06.2026 bereinigt)
+- Einzige API-Route: `src/app/api/generate/route.ts`. Env-Vars (Vercel): `GEMINI_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`; optional `GEMINI_IMAGE_MODEL` / `GEMINI_VISION_MODEL` zum Übersteuern.
 - `GEMINI_API_KEY` in Vercel Env Vars (bezahltes Google AI Studio Konto)
