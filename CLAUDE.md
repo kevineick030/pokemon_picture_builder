@@ -6,7 +6,7 @@ Kevin ist Endnutzer mit ADHS und will keine Deployment-Überraschungen. Für JED
 1. **Zuerst diese CLAUDE.md + START-HIER.md lesen.**
 2. **Direkt auf `main` arbeiten.** Push nach `main` = live/produktiv. **KEINE Preview-Branches oder Pull Requests** erstellen, außer Kevin fragt ausdrücklich danach.
 3. **Deployment:** Push nach `main` → Vercel baut automatisch live. Datenbank: Supabase-Projekt „Pokemon Picture Builder".
-4. **Dauerhaftes Wissen hierher schreiben:** Wenn Kevin etwas erklärt, das künftig gelten soll, in diese CLAUDE.md aufnehmen – nicht nur im Chat lassen.
+4. **Doku aktuell halten (PFLICHT):** Nach JEDER nennenswerten Code-Änderung diese CLAUDE.md **im selben Commit** mit aktualisieren (neue Features, geänderte Abläufe, Deploy, Config). Veraltete Doku ist schlimmer als keine. Auch was Kevin als dauerhafte Regel sagt, kommt hierher – nicht nur in den Chat.
 5. **Einfache Sprache, keine unnötigen Fachbegriffe.**
 
 ---
