@@ -37,7 +37,13 @@ hoch → Gemini erzeugt die Karte. Die Ergebnisse landen in einer eigenen Supaba
 **Aktuelle Modelle** (in `src/app/api/generate/route.ts`):
 - `IMAGE_MODEL` = `gemini-3-pro-image-preview` (Fallback-Chain zu älteren Modellen)
 - `VISION_MODEL` = `gemini-2.5-flash`
-- Kein `GEMINI_IMAGE_MODEL` Env-Var in Vercel gesetzt → Code-Default wird genutzt
+- `GEMINI_IMAGE_MODEL` Env-Var in Vercel steuert das Bild-Modell (überschreibt den Code-Default).
+
+### 💶 Kosten / Bild-Modell (wichtig)
+- **`gemini-3-pro-image-preview`** = „Nano Banana Pro" (Gemini 3 Pro Image) → beste Qualität, **kostenpflichtig** (paid tier).
+- **`gemini-3.1-flash-image-preview`** = „Nano Banana 2" (Flash) → etwas einfachere Qualität, aber im Vorschau-Stadium **aktuell gratis** (dasselbe Modell, das der RookieCard-Telegram-Bot nutzt).
+- Um (aktuell) **kostenlos** zu fahren: in Vercel `GEMINI_IMAGE_MODEL = gemini-3.1-flash-image-preview` setzen + neu deployen.
+- ⚠️ „Gratis" gilt nur, solange Google das Modell als Vorschau gratis hält — Ausgaben-Limit im Google-Projekt gesetzt lassen.
 
 ---
 
