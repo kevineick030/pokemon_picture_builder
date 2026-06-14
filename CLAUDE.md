@@ -1,5 +1,16 @@
 @AGENTS.md
 
+## 🚦 Regeln für KI-Sessions (immer befolgen)
+Kevin ist Endnutzer mit ADHS und will keine Deployment-Überraschungen. Für JEDE Session (lokal wie Cloud):
+
+1. **Zuerst diese CLAUDE.md + START-HIER.md lesen.**
+2. **Direkt auf `main` arbeiten.** Push nach `main` = live/produktiv. **KEINE Preview-Branches oder Pull Requests** erstellen, außer Kevin fragt ausdrücklich danach.
+3. **Deployment:** Push nach `main` → Vercel baut automatisch live. Datenbank: Supabase-Projekt „Pokemon Picture Builder".
+4. **Dauerhaftes Wissen hierher schreiben:** Wenn Kevin etwas erklärt, das künftig gelten soll, in diese CLAUDE.md aufnehmen – nicht nur im Chat lassen.
+5. **Einfache Sprache, keine unnötigen Fachbegriffe.**
+
+---
+
 # My Rookie Card – Wichtige Debugging-Historie
 
 ## Kritischer Fehler: "Bild-Modell nicht verfügbar" (War NICHT das Bildmodell!)
